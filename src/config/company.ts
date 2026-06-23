@@ -28,12 +28,11 @@ export const company = {
   address: "Jakarta, Indonesia",
   establishedYear: 2012,
   navItems: [
+    { label: "Products", href: "#products" },
     { label: "Solutions", href: "#solutions" },
     { label: "Industries", href: "#industries" },
-    { label: "Products", href: "#products" },
-    { label: "Portfolio", href: "#portfolio" },
-    { label: "About", href: "#about" },
-    { label: "Contact", href: "#contact" },
+    { label: "Resources", href: "#resources" },
+    { label: "Company", href: "#company" },
   ],
   metrics: [
     { value: "200+", label: "Enterprise clients" },

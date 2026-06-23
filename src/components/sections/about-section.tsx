@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/shared/section-heading";
 
 export function AboutSection() {
   return (
-    <section id="about" aria-labelledby="about-title" className="section-shell">
+    <section id="company" aria-labelledby="about-title" className="section-shell">
       <Container className="grid gap-14 lg:grid-cols-[.8fr_1.2fr] lg:items-start">
         <div className="lg:sticky lg:top-28">
           <SectionHeading

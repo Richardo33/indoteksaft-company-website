@@ -57,18 +57,38 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+    background: transparent;
   }
 
   html {
     @apply font-sans;
     color-scheme: dark;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
     background-image:
       radial-gradient(circle at 12% 0%, rgba(0, 102, 255, 0.08), transparent 28rem),
       linear-gradient(#050b18, #050b18);
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+    background: transparent;
   }
 
   a,
@@ -125,6 +145,30 @@
 .orbit-label[data-position="3"] {
   left: 25%;
   top: 8%;
+}
+
+.type-cursor {
+  display: inline-block;
+  width: 0.08em;
+  height: 0.82em;
+  margin-left: 0.08em;
+  border-radius: 999px;
+  background: rgb(103 232 249);
+  vertical-align: -0.06em;
+  animation: type-cursor-blink 0.85s steps(1, end) infinite;
+  box-shadow: 0 0 0.5em rgba(34, 211, 238, 0.65);
+}
+
+@keyframes type-cursor-blink {
+  0%,
+  48% {
+    opacity: 1;
+  }
+
+  49%,
+  100% {
+    opacity: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

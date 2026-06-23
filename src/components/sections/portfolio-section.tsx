@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/shared/section-heading";
 
 export function PortfolioSection() {
   return (
-    <section id="portfolio" aria-labelledby="portfolio-title" className="section-shell bg-[#07101f]/55">
+    <section id="resources" aria-labelledby="portfolio-title" className="section-shell bg-[#07101f]/55">
       <Container>
         <SectionHeading
           eyebrow="Selected portfolio"

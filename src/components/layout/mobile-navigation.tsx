@@ -41,12 +41,15 @@ export function MobileNavigation({ items }: MobileNavigationProps) {
               {item.label}
             </a>
           ))}
+          <span className="block rounded-xl px-4 py-3 text-sm font-medium uppercase text-slate-400">
+            English
+          </span>
           <a
             href="#contact"
             className="mt-2 block rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white"
             onClick={() => setOpen(false)}
           >
-            Schedule Consultation
+            Contact Sales
           </a>
         </nav>
       )}

@@ -12,9 +12,9 @@ export default function HomePage() {
     <main>
       <HeroSection />
       <MetricsSection />
+      <ProductsSection />
       <SolutionsSection />
       <IndustriesSection />
-      <ProductsSection />
       <PortfolioSection />
       <AboutSection />
       <ContactSection />

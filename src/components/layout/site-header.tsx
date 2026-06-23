@@ -1,3 +1,5 @@
+import { Globe2 } from "lucide-react";
+
 import { company } from "@/config/company";
 import { Container } from "@/components/shared/container";
 import { BrandMark } from "@/components/shared/brand-mark";
@@ -23,12 +25,18 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <a
-          href="#contact"
-          className="hidden rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-500 lg:inline-flex"
-        >
-          Schedule Consultation
-        </a>
+        <div className="hidden items-center gap-5 lg:flex">
+          <span className="inline-flex items-center gap-2 text-xs font-medium uppercase text-slate-300">
+            <Globe2 aria-hidden="true" size={14} />
+            English
+          </span>
+          <a
+            href="#contact"
+            className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold uppercase text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-500"
+          >
+            Contact Sales
+          </a>
+        </div>
 
         <MobileNavigation items={company.navItems} />
       </Container>

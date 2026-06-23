@@ -3,6 +3,15 @@ import { ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 
 import { company } from "@/config/company";
 import { Container } from "@/components/shared/container";
+import { HeroParticles } from "@/components/shared/hero-particles";
+import { RotatingTypeText } from "@/components/shared/rotating-type-text";
+
+const heroRotatingWords = [
+  "Defense-Grade Infrastructure",
+  "Sovereign Cloud Platforms",
+  "Mission-Critical Cybersecurity",
+  "AI-Driven Operations",
+] as const;
 
 export function HeroSection() {
   return (
@@ -22,8 +31,11 @@ export function HeroSection() {
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(90deg,#050b18_5%,rgba(5,11,24,.96)_38%,rgba(5,11,24,.72)_70%,#050b18_100%)]" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_38%,rgba(0,102,255,.22),transparent_30%)]" />
       <div className="tech-grid absolute inset-0 -z-10 opacity-40" />
+      <div className="absolute inset-0 -z-10 opacity-80 [mask-image:linear-gradient(to_bottom,black_10%,black_75%,transparent_100%)]">
+        <HeroParticles />
+      </div>
 
-      <Container className="grid min-h-[690px] items-center gap-14 py-24 lg:grid-cols-[1.1fr_.9fr]">
+      <Container className="grid min-h-[650px] items-center gap-14 py-12 sm:py-14 lg:-translate-y-5 lg:grid-cols-[1.1fr_.9fr]">
         <div className="min-w-0">
           <div className="mb-7 inline-flex max-w-full items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[0.06] px-3 py-2 sm:px-4">
             <ShieldCheck aria-hidden="true" className="text-cyan-300" size={15} />
@@ -36,17 +48,20 @@ export function HeroSection() {
             id="hero-title"
             className="max-w-4xl text-balance text-[2.65rem] font-bold leading-[1.04] tracking-[-0.055em] text-white sm:text-6xl lg:text-7xl"
           >
-            Engineering the{" "}
-            <span className="bg-gradient-to-r from-blue-500 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
-              sovereign digital core
-            </span>{" "}
-            of tomorrow.
+            Delivering
+            <span className="block min-h-[2.08em] sm:min-h-[2.02em] lg:min-h-[1.98em]">
+              <RotatingTypeText
+                words={heroRotatingWords}
+                className="bg-gradient-to-r from-blue-500 via-cyan-300 to-blue-400 bg-clip-text text-transparent"
+              />
+            </span>
+            <span className="block">at National Scale</span>
           </h1>
 
           <p className="mt-7 max-w-2xl text-pretty text-base leading-8 text-slate-300/70 sm:text-lg">
-            {company.legalName} merancang ekosistem teknologi end-to-end—dari
-            data center dan cyber defense hingga cloud serta AI-driven
-            operations.
+            {company.legalName} engineers end-to-end technology ecosystems from
+            datacenter design to AI-driven operations trusted by 200+
+            organizations across Indonesia&apos;s most critical sectors.
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -54,14 +69,14 @@ export function HeroSection() {
               href="#contact"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 text-sm font-semibold text-white shadow-xl shadow-blue-600/25 transition hover:-translate-y-0.5 hover:bg-blue-500"
             >
-              Start a Conversation
+              Start Free Consultation
               <ArrowRight aria-hidden="true" size={17} />
             </a>
             <a
               href="#solutions"
               className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] px-6 text-sm font-semibold text-white transition hover:border-cyan-300/40 hover:bg-cyan-300/[0.06]"
             >
-              Explore Capabilities
+              Explore Solutions
             </a>
           </div>
 
