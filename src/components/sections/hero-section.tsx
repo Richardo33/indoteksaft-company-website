@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 
 import { company } from "@/config/company";
 import { Container } from "@/components/shared/container";
@@ -21,24 +21,29 @@ export function HeroSection() {
       className="relative isolate min-h-[760px] overflow-hidden pt-18"
     >
       <Image
-        src="/images/hero.png"
+        src="/images/hero-bg.png"
         alt=""
         fill
         priority
         sizes="100vw"
-        className="-z-30 object-cover object-center opacity-30"
+        className="-z-30 object-cover object-center"
       />
-      <div className="absolute inset-0 -z-20 bg-[linear-gradient(90deg,#050b18_5%,rgba(5,11,24,.96)_38%,rgba(5,11,24,.72)_70%,#050b18_100%)]" />
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_38%,rgba(0,102,255,.22),transparent_30%)]" />
+      <div className="absolute inset-0 -z-20 bg-[linear-gradient(90deg,#050b18_0%,rgba(5,11,24,.94)_34%,rgba(5,11,24,.5)_62%,rgba(5,11,24,.14)_100%)]" />
+      <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(5,11,24,.24)_0%,rgba(5,11,24,.06)_45%,rgba(5,11,24,.28)_100%)]" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_38%,rgba(0,102,255,.12),transparent_34%)]" />
       <div className="tech-grid absolute inset-0 -z-10 opacity-40" />
       <div className="absolute inset-0 -z-10 opacity-80 [mask-image:linear-gradient(to_bottom,black_10%,black_75%,transparent_100%)]">
         <HeroParticles />
       </div>
 
-      <Container className="grid min-h-[650px] items-center gap-14 py-12 sm:py-14 lg:-translate-y-5 lg:grid-cols-[1.1fr_.9fr]">
+      <Container className="grid min-h-[650px] items-center py-12 sm:py-14 lg:-translate-y-5">
         <div className="min-w-0">
           <div className="mb-7 inline-flex max-w-full items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[0.06] px-3 py-2 sm:px-4">
-            <ShieldCheck aria-hidden="true" className="text-cyan-300" size={15} />
+            <ShieldCheck
+              aria-hidden="true"
+              className="text-cyan-300"
+              size={15}
+            />
             <span className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-200 sm:text-xs sm:tracking-[0.22em]">
               Indonesia&apos;s critical tech partner
             </span>
@@ -79,40 +84,6 @@ export function HeroSection() {
               Explore Solutions
             </a>
           </div>
-
-          <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-400">
-            {["Security-first", "Enterprise-grade", "24/7 operations"].map(
-              (item) => (
-                <li key={item} className="flex items-center gap-2">
-                  <CheckCircle2 aria-hidden="true" className="text-cyan-400" size={16} />
-                  {item}
-                </li>
-              ),
-            )}
-          </ul>
-        </div>
-
-        <div className="relative mx-auto hidden aspect-square w-full max-w-[480px] lg:block">
-          <div className="absolute inset-[12%] rounded-full border border-blue-400/20" />
-          <div className="absolute inset-[22%] rounded-full border border-cyan-300/20" />
-          <div className="absolute inset-[32%] rounded-full border border-blue-400/25 bg-blue-500/[0.08] shadow-[0_0_80px_rgba(0,102,255,.22)]" />
-          <div className="absolute inset-[41%] grid place-items-center rounded-3xl border border-cyan-300/35 bg-[#07152e]/90 text-center shadow-2xl shadow-blue-600/25">
-            <div>
-              <span className="block text-2xl font-bold text-white">{company.shortName}</span>
-              <span className="mt-1 block text-[10px] uppercase tracking-[0.24em] text-cyan-300">
-                Digital Core
-              </span>
-            </div>
-          </div>
-          {["Cyber", "Cloud", "Data", "Network"].map((label, index) => (
-            <div
-              key={label}
-              className="orbit-label absolute rounded-lg border border-white/10 bg-slate-950/80 px-3 py-2 text-xs font-medium text-slate-300 backdrop-blur"
-              data-position={index}
-            >
-              {label}
-            </div>
-          ))}
         </div>
       </Container>
     </section>

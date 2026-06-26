@@ -2,7 +2,20 @@ import type { LucideIcon } from "lucide-react";
 
 export type NavItem = {
   readonly label: string;
-  readonly href: `#${string}`;
+  readonly href: string;
+};
+
+export type FooterLinkGroup = {
+  readonly title: string;
+  readonly links: readonly {
+    readonly label: string;
+    readonly href: string;
+  }[];
+};
+
+export type SocialLink = {
+  readonly label: string;
+  readonly href: string;
 };
 
 export type Metric = {
@@ -55,8 +68,11 @@ export type CompanyConfig = {
   readonly email: string;
   readonly phone: string;
   readonly address: string;
+  readonly footerAddress: readonly string[];
   readonly establishedYear: number;
   readonly navItems: readonly NavItem[];
+  readonly footerLinks: readonly FooterLinkGroup[];
+  readonly socialLinks: readonly SocialLink[];
   readonly metrics: readonly Metric[];
   readonly solutions: readonly Solution[];
   readonly industries: readonly Industry[];

@@ -1,22 +1,22 @@
-import { AboutSection } from "@/components/sections/about-section";
 import { ContactSection } from "@/components/sections/contact-section";
+import { EnterpriseSoftwareSection } from "@/components/sections/enterprise-software-section";
 import { HeroSection } from "@/components/sections/hero-section";
+import { IndustrySummarySection } from "@/components/sections/industry-summary-section";
 import { IndustriesSection } from "@/components/sections/industries-section";
+import { InsightsSection } from "@/components/sections/insight-section";
 import { MetricsSection } from "@/components/sections/metrics-section";
-import { PortfolioSection } from "@/components/sections/portfolio-section";
 import { ProductsSection } from "@/components/sections/products-section";
-import { SolutionsSection } from "@/components/sections/solutions-section";
 
 export default function HomePage() {
   return (
     <main>
       <HeroSection />
       <MetricsSection />
+      <IndustrySummarySection />
       <ProductsSection />
-      <SolutionsSection />
+      <EnterpriseSoftwareSection />
+      <InsightsSection />
       <IndustriesSection />
-      <PortfolioSection />
-      <AboutSection />
       <ContactSection />
     </main>
   );

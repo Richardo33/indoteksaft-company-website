@@ -1,6 +1,7 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 import type { NavItem } from "@/types/company";
@@ -32,25 +33,25 @@ export function MobileNavigation({ items }: MobileNavigationProps) {
           className="absolute inset-x-5 top-[4.75rem] rounded-2xl border border-white/10 bg-slate-950/95 p-3 shadow-2xl shadow-black/30 backdrop-blur-xl"
         >
           {items.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-blue-500/10 hover:text-cyan-300"
               onClick={() => setOpen(false)}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
           <span className="block rounded-xl px-4 py-3 text-sm font-medium uppercase text-slate-400">
             English
           </span>
-          <a
-            href="#contact"
+          <Link
+            href="/#contact"
             className="mt-2 block rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white"
             onClick={() => setOpen(false)}
           >
             Contact Sales
-          </a>
+          </Link>
         </nav>
       )}
     </div>

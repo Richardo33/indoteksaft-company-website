@@ -1,55 +1,130 @@
-import { ArrowRight, Check } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Check, Code2, RadioTower, ServerCog } from "lucide-react";
 
-import { company } from "@/config/company";
 import { Container } from "@/components/shared/container";
-import { SectionHeading } from "@/components/shared/section-heading";
+
+const technologySolutions = [
+  {
+    title: "IT Infrastructure Solutions",
+    description:
+      "Comprehensive infrastructure solutions designed to optimize performance, strengthen security, and support the evolving needs of modern enterprises.",
+    image: "/images/industry-defense.png",
+    icon: ServerCog,
+    features: [
+      "Secure & Reliable Infrastructure",
+      "High Availability & Scalability",
+      "24/7 Monitoring & Support",
+    ],
+  },
+  {
+    title: "Tech Delivery Solutions",
+    description:
+      "Comprehensive technology delivery services that transform business requirements into secure, scalable, and future-ready digital solutions.",
+    image: "/images/industry-enterprise.png",
+    icon: Code2,
+    features: [
+      "Custom Development",
+      "Scalable Architecture",
+      "End-to-End Delivery",
+    ],
+  },
+  {
+    title: "Telecommunication Solutions",
+    description:
+      "Comprehensive telecommunications services to support network development, infrastructure maintenance, and reliable connectivity.",
+    image: "/images/industry-telecom.png",
+    icon: RadioTower,
+    features: [
+      "BTS Installation & Upgrade",
+      "Site Maintenance",
+      "Civil, Mechanical & Electrical (CME)",
+    ],
+  },
+] as const;
 
 export function ProductsSection() {
   return (
-    <section id="products" aria-labelledby="products-title" className="section-shell">
+    <section
+      id="products"
+      aria-labelledby="products-title"
+      className="bg-white py-8 text-slate-950 sm:py-10 lg:py-12"
+    >
       <Container>
-        <SectionHeading
-          eyebrow="Digital products"
-          title="Platforms that turn complex operations into clear control."
-          description="Produk dummy berikut menggambarkan arah solusi proprietary yang dapat dikembangkan tanpa mengikat arsitektur website pada backend tertentu."
-          align="center"
-        />
+        <div className="mx-auto max-w-3xl text-center">
+          <span className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600">
+            What we do
+          </span>
+          <h2
+            id="products-title"
+            className="mt-5 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl"
+          >
+            End-to-End Technology Solutions
+          </h2>
+          <p className="mt-5 text-base leading-8 text-slate-500 sm:text-lg">
+            From building resilient digital infrastructure to delivering
+            intelligent technology solutions, our core capabilities empower
+            every stage of your digital transformation.
+          </p>
+        </div>
 
-        <div className="mt-14 grid gap-5 lg:grid-cols-3">
-          {company.products.map((product) => {
-            const Icon = product.icon;
+        <div className="mt-14 grid gap-8 lg:grid-cols-3">
+          {technologySolutions.map((solution) => {
+            const Icon = solution.icon;
+            const featureSlots = Array.from({ length: 3 }, (_, index) =>
+              solution.features[index] ?? null
+            );
 
             return (
-              <article
-                key={product.name}
-                className="flex h-full flex-col rounded-2xl border border-white/[0.08] bg-gradient-to-b from-white/[0.045] to-transparent p-7"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="grid size-12 place-items-center rounded-xl bg-cyan-300/10 text-cyan-300">
-                    <Icon aria-hidden="true" size={23} />
+              <article key={solution.title} className="group flex h-full flex-col">
+                <div className="relative aspect-[16/9] overflow-hidden bg-cyan-50">
+                  <Image
+                    src={solution.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 30vw"
+                    className="object-cover object-center transition duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-cyan-50/35 mix-blend-screen" />
+                  <div className="absolute bottom-0 left-0 grid size-12 place-items-center bg-[#0d2f86] text-white sm:size-14">
+                    <Icon aria-hidden="true" size={22} />
                   </div>
-                  <span className="rounded-full border border-emerald-300/15 bg-emerald-300/[0.06] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
-                    {product.status}
-                  </span>
                 </div>
-                <p className="mt-7 text-xs font-bold uppercase tracking-[0.2em] text-blue-400">
-                  {product.category}
+
+                <h3 className="mt-6 line-clamp-1 min-h-7 text-xl font-bold leading-7 tracking-[-0.03em] text-slate-950">
+                  {solution.title}
+                </h3>
+                <p className="mt-4 line-clamp-3 min-h-[84px] text-sm leading-7 text-slate-600">
+                  {solution.description}
                 </p>
-                <h3 className="mt-3 text-2xl font-bold text-white">{product.name}</h3>
-                <p className="mt-4 flex-1 leading-7 text-slate-400">{product.description}</p>
-                <ul className="mt-6 space-y-3 border-t border-white/[0.07] pt-6">
-                  {product.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm text-slate-300">
-                      <Check aria-hidden="true" size={15} className="text-cyan-400" />
-                      {feature}
+
+                <ul className="mt-5 min-h-[84px] space-y-3">
+                  {featureSlots.map((feature, index) => (
+                    <li
+                      key={feature ?? `empty-feature-${index}`}
+                      className="flex min-h-5 items-start gap-3 text-sm text-slate-500"
+                      aria-hidden={!feature ? "true" : undefined}
+                    >
+                      {feature ? (
+                        <>
+                          <Check
+                            aria-hidden="true"
+                            className="mt-1 shrink-0 text-blue-600"
+                            size={15}
+                          />
+                          <span className="line-clamp-1">{feature}</span>
+                        </>
+                      ) : (
+                        <span className="block h-5" />
+                      )}
                     </li>
                   ))}
                 </ul>
+
                 <a
-                  href="#contact"
-                  className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-white transition hover:text-cyan-300"
+                  href="/solutions"
+                  className="mt-8 inline-flex min-h-11 w-fit items-center justify-center gap-2 border border-blue-600 px-6 text-sm font-semibold text-blue-600 transition hover:bg-blue-600 hover:text-white"
                 >
-                  Request product briefing
+                  Detail Solutions
                   <ArrowRight aria-hidden="true" size={16} />
                 </a>
               </article>

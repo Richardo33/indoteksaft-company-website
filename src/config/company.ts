@@ -25,20 +25,60 @@ export const company = {
   website: "https://www.indoteksaft.co.id",
   email: "info@indoteksaft.co.id",
   phone: "+62 21 0000 0000",
-  address: "Jakarta, Indonesia",
+  address: "Soreang, Kab. Bandung, Jawa Barat, Indonesia",
+  footerAddress: [
+    "Jl. Raya Gading Tutuka No.103,",
+    "Soreang, Kab. Bandung, Jawa Barat",
+    "40921",
+  ],
   establishedYear: 2012,
   navItems: [
-    { label: "Products", href: "#products" },
-    { label: "Solutions", href: "#solutions" },
-    { label: "Industries", href: "#industries" },
-    { label: "Resources", href: "#resources" },
-    { label: "Company", href: "#company" },
+    { label: "Products", href: "/products" },
+    { label: "Solutions", href: "/solutions" },
+    { label: "Industries", href: "/#industries" },
+    { label: "Resources", href: "/articles" },
+    { label: "Company", href: "/#company" },
+  ],
+  footerLinks: [
+    {
+      title: "Services",
+      links: [
+        { label: "IT Infrastructure Solutions", href: "/solutions" },
+        { label: "Tech Delivery Solutions", href: "/solutions" },
+        { label: "Telecommunication Solutions", href: "/solutions" },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "About Us", href: "#company" },
+        { label: "Careers", href: "#" },
+        { label: "Terms & Conditions", href: "#" },
+        { label: "Privacy Policy", href: "#" },
+      ],
+    },
+    {
+      title: "Resources",
+      links: [
+        { label: "Portfolio", href: "#resources" },
+        { label: "Brosur", href: "#" },
+        { label: "Blog", href: "/articles" },
+        { label: "Event", href: "#" },
+      ],
+    },
+  ],
+  socialLinks: [
+    { label: "Linkedin", href: "https://www.linkedin.com" },
+    {
+      label: "Instagram",
+      href: "https://www.instagram.com/indoteksaft?igsh=aXhpZzV3eW1pN2hx",
+    },
   ],
   metrics: [
-    { value: "200+", label: "Enterprise clients" },
-    { value: "12+", label: "Years of execution" },
-    { value: "24/7", label: "Operational support" },
-    { value: "99.99%", label: "Target availability" },
+    { value: "8+", label: "Years Experience" },
+    { value: "100+", label: "Organizations Served" },
+    { value: "200+", label: "Project Delivered" },
+    { value: "99%", label: "Client Satisfaction" },
   ],
   solutions: [
     {

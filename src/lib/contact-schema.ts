@@ -3,6 +3,13 @@ import { z } from "zod";
 const cleanText = (value: string) =>
   value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim();
 
+const cleanMultilineText = (value: string) =>
+  cleanText(value)
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .map((line) => line.trimEnd())
+    .join("\n");
+
 export const contactSchema = z.object({
   name: z
     .string()
@@ -12,6 +19,11 @@ export const contactSchema = z.object({
     .string()
     .transform(cleanText)
     .pipe(z.string().min(2, "Nama perusahaan minimal 2 karakter.").max(120)),
+  position: z
+    .string()
+    .transform(cleanText)
+    .pipe(z.string().max(100))
+    .optional(),
   email: z
     .string()
     .trim()
@@ -37,7 +49,7 @@ export const contactSchema = z.object({
   ]),
   message: z
     .string()
-    .transform(cleanText)
+    .transform(cleanMultilineText)
     .pipe(z.string().min(20, "Ceritakan kebutuhan Anda minimal 20 karakter.").max(2000)),
   website: z.string().max(200).optional(),
 });

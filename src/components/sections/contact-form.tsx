@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, CheckCircle2, LoaderCircle } from "lucide-react";
+import { CheckCircle2, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -12,7 +12,7 @@ import {
   type ContactInput,
 } from "@/lib/contact-schema";
 
-const interests = [
+const industries = [
   "Cybersecurity",
   "Infrastructure & Data Center",
   "Cloud & Hybrid",
@@ -33,6 +33,7 @@ export function ContactForm() {
     defaultValues: {
       name: "",
       company: "",
+      position: "",
       email: "",
       phone: "",
       interest: "Cybersecurity",
@@ -61,66 +62,84 @@ export function ContactForm() {
   });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-5">
+    <form
+      onSubmit={onSubmit}
+      noValidate
+      className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8 lg:p-10"
+    >
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Nama lengkap" error={errors.name?.message}>
+        <Field label="Full Name" error={errors.name?.message}>
           <input
             {...register("name")}
             autoComplete="name"
-            className="form-control"
-            placeholder="Nama Anda"
+            className="consultation-control"
+            placeholder="Your name"
           />
         </Field>
-        <Field label="Perusahaan" error={errors.company?.message}>
+
+        <Field label="Company" error={errors.company?.message}>
           <input
             {...register("company")}
             autoComplete="organization"
-            className="form-control"
-            placeholder="Nama perusahaan"
+            className="consultation-control"
+            placeholder="Company name"
           />
         </Field>
-        <Field label="Email bisnis" error={errors.email?.message}>
+
+        <Field label="Email" error={errors.email?.message}>
           <input
             {...register("email")}
             type="email"
             inputMode="email"
             autoComplete="email"
-            className="form-control"
-            placeholder="name@company.com"
+            className="consultation-control"
+            placeholder="work@company.com"
           />
         </Field>
-        <Field label="Nomor telepon" error={errors.phone?.message}>
+
+        <Field label="Position" error={errors.position?.message}>
+          <input
+            {...register("position")}
+            autoComplete="organization-title"
+            className="consultation-control"
+            placeholder="Your role"
+          />
+        </Field>
+
+        <Field label="Phone" error={errors.phone?.message}>
           <input
             {...register("phone")}
             type="tel"
             inputMode="tel"
             autoComplete="tel"
-            className="form-control"
+            className="consultation-control"
             placeholder="+62"
+          />
+        </Field>
+
+        <Field label="Industry" error={errors.interest?.message}>
+          <select {...register("interest")} className="consultation-control">
+            {industries.map((industry) => (
+              <option key={industry} value={industry}>
+                {industry === "Other" ? "Select industry" : industry}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </div>
+
+      <div className="mt-5">
+        <Field label="Project Requirement" error={errors.message?.message}>
+          <textarea
+            {...register("message")}
+            rows={5}
+            className="consultation-control resize-none py-3"
+            placeholder={"Describe your project needs...\n- Current challenge\n- Expected timeline\n- Required solution"}
           />
         </Field>
       </div>
 
-      <Field label="Area kebutuhan" error={errors.interest?.message}>
-        <select {...register("interest")} className="form-control">
-          {interests.map((interest) => (
-            <option key={interest} value={interest}>
-              {interest}
-            </option>
-          ))}
-        </select>
-      </Field>
-
-      <Field label="Ceritakan kebutuhan Anda" error={errors.message?.message}>
-        <textarea
-          {...register("message")}
-          rows={5}
-          className="form-control resize-y"
-          placeholder="Konteks, tantangan, target, atau timeline..."
-        />
-      </Field>
-
-      <div className="absolute -left-[9999px]" aria-hidden="true">
+      <div className="absolute left-[-9999px]" aria-hidden="true">
         <label htmlFor="website">Website</label>
         <input
           {...register("website")}
@@ -134,14 +153,16 @@ export function ContactForm() {
         <div
           role="status"
           aria-live="polite"
-          className={`rounded-xl border px-4 py-3 text-sm ${
+          className={`mt-5 rounded-xl border px-4 py-3 text-sm ${
             result.ok
-              ? "border-emerald-400/20 bg-emerald-400/[0.07] text-emerald-200"
-              : "border-red-400/20 bg-red-400/[0.07] text-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+              : "border-red-200 bg-red-50 text-red-700"
           }`}
         >
           <div className="flex items-start gap-2">
-            {result.ok && <CheckCircle2 aria-hidden="true" className="mt-0.5" size={16} />}
+            {result.ok && (
+              <CheckCircle2 aria-hidden="true" className="mt-0.5" size={16} />
+            )}
             <span>{result.message}</span>
           </div>
         </div>
@@ -150,18 +171,19 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="mt-7 inline-flex min-h-12 items-center justify-center  bg-blue-600 px-10 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(37,99,235,0.25)] transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? (
           <>
-            <LoaderCircle aria-hidden="true" className="animate-spin" size={17} />
-            Mengirim...
+            <LoaderCircle
+              aria-hidden="true"
+              className="mr-2 animate-spin"
+              size={17}
+            />
+            Sending...
           </>
         ) : (
-          <>
-            Send Inquiry
-            <ArrowRight aria-hidden="true" size={17} />
-          </>
+          "Book Consultation"
         )}
       </button>
     </form>
@@ -176,10 +198,12 @@ type FieldProps = {
 
 function Field({ label, error, children }: FieldProps) {
   return (
-    <label className="block text-sm font-medium text-slate-300">
+    <label className="block text-sm font-semibold text-slate-700">
       <span className="mb-2 block">{label}</span>
       {children}
-      {error && <span className="mt-2 block text-xs text-red-300">{error}</span>}
+      {error && (
+        <span className="mt-2 block text-xs text-red-600">{error}</span>
+      )}
     </label>
   );
 }

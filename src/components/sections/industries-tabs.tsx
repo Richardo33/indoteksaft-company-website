@@ -93,7 +93,9 @@ export function IndustriesTabs({ industries }: IndustriesTabsProps) {
             Sector expertise
           </p>
           <h3 className="mt-3 text-3xl font-bold text-white">{active.title}</h3>
-          <p className="mt-3 max-w-xl leading-7 text-slate-300/80">{active.description}</p>
+          <p className="mt-3 line-clamp-3 min-h-[84px] max-w-xl leading-7 text-slate-300/80">
+            {active.description}
+          </p>
           <ul className="mt-6 flex flex-wrap gap-2">
             {active.solutions.map((solution) => (
               <li

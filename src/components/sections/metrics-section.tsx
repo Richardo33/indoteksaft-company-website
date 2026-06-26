@@ -3,14 +3,14 @@ import { Container } from "@/components/shared/container";
 
 export function MetricsSection() {
   return (
-    <section aria-label="Company metrics" className="border-y border-white/[0.07] bg-[#07101f]/85">
-      <Container className="grid grid-cols-2 divide-x divide-white/[0.07] lg:grid-cols-4">
+    <section aria-label="Company metrics" className="bg-[#0d2f86]">
+      <Container className="grid grid-cols-2 gap-y-8 py-10 sm:py-12 lg:grid-cols-4">
         {company.metrics.map((metric) => (
-          <div key={metric.label} className="px-4 py-8 text-center sm:py-10">
-            <strong className="block text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          <div key={metric.label} className="px-4 text-left">
+            <strong className="block text-2xl font-bold tracking-tight text-cyan-200 sm:text-3xl">
               {metric.value}
             </strong>
-            <span className="mt-2 block text-xs uppercase tracking-[0.16em] text-slate-500">
+            <span className="mt-1 block text-sm font-medium text-cyan-50/85">
               {metric.label}
             </span>
           </div>

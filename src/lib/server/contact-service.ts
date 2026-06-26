@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { ContactPayload } from "@/lib/contact-schema";
+import { formatProjectRequirement } from "@/lib/server/contact-format";
 import { env } from "@/lib/server/env";
 import { logger } from "@/lib/server/logger";
 
@@ -8,6 +9,8 @@ export async function deliverContact(
   payload: ContactPayload,
   requestId: string,
 ): Promise<void> {
+  const formattedRequirement = formatProjectRequirement(payload.message);
+
   if (!env.CONTACT_WEBHOOK_URL) {
     logger.info("contact.accepted_dummy", {
       requestId,
@@ -25,7 +28,15 @@ export async function deliverContact(
         ? { Authorization: `Bearer ${env.CONTACT_WEBHOOK_TOKEN}` }
         : {}),
     },
-    body: JSON.stringify({ ...payload, requestId }),
+    body: JSON.stringify({
+      ...payload,
+      requestId,
+      projectRequirement: {
+        text: formattedRequirement.text,
+        html: formattedRequirement.html,
+        lines: formattedRequirement.lines,
+      },
+    }),
     cache: "no-store",
     signal: AbortSignal.timeout(8_000),
   });

@@ -1,5 +1,3 @@
-import { Globe2, Mail, MapPin, Phone } from "lucide-react";
-
 import { company } from "@/config/company";
 import { BrandMark } from "@/components/shared/brand-mark";
 import { Container } from "@/components/shared/container";
@@ -8,85 +6,120 @@ export function SiteFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-white/[0.07] bg-[#030712]">
-      <Container className="grid gap-12 py-14 md:grid-cols-2 lg:grid-cols-4">
-        <div className="lg:col-span-2">
-          <BrandMark />
-          <p className="mt-5 max-w-md text-sm leading-7 text-slate-500">
-            {company.tagline}. Make it happen. Make it matter.
-          </p>
-        </div>
+    <footer className="bg-white text-slate-700">
+      <Container className="pb-14 pt-0 sm:pb-16 lg:pb-20">
+        <div className="pt-12">
+          <div className="grid gap-12 lg:grid-cols-[1.35fr_2fr]">
+            <div>
+              <BrandMark className="text-slate-950" />
 
-        <div>
-          <h2 className="text-sm font-semibold text-white">Explore</h2>
-          <nav aria-label="Navigasi footer" className="mt-5 grid grid-cols-2 gap-3">
-            {company.navItems.map((item) => (
+              <div className="mt-8 space-y-4 text-sm leading-7">
+                <p className="font-bold text-slate-950">{company.legalName}</p>
+                <address className="not-italic text-slate-500">
+                  {company.footerAddress.map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </address>
+                <p className="pt-4 text-slate-500">
+                  Empowering Digital Transformation.
+                  <br />
+                  Make it Happen, Make it Matter.
+                </p>
+              </div>
+            </div>
+
+            <nav
+              aria-label="Footer navigation"
+              className="grid gap-10 sm:grid-cols-3"
+            >
+              {company.footerLinks.map((group) => (
+                <div key={group.title}>
+                  <h2 className="text-sm font-bold uppercase text-slate-950">
+                    {group.title}
+                  </h2>
+                  <ul className="mt-5 space-y-4">
+                    {group.links.map((link) => (
+                      <li key={`${group.title}-${link.label}`}>
+                        <a
+                          href={link.href}
+                          className="text-sm text-slate-500 transition hover:text-blue-600"
+                        >
+                          {link.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </nav>
+          </div>
+
+          <div className="mt-14 grid border border-slate-200 text-sm text-slate-400 md:grid-cols-[1fr_auto_auto]">
+            <p className="flex min-h-16 items-center px-7">
+              &copy; 2018-{currentYear} {company.legalName}. All rights reserved.
+            </p>
+
+            {company.socialLinks.map((social) => (
               <a
-                key={item.href}
-                href={item.href}
-                className="text-sm text-slate-500 transition hover:text-cyan-300"
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+                className="flex min-h-16 items-center gap-3 border-t border-slate-200 px-7 transition hover:bg-slate-50 hover:text-blue-600 md:border-l md:border-t-0"
               >
-                {item.label}
+                {social.label === "Linkedin" ? (
+                  <LinkedinIcon />
+                ) : (
+                  <InstagramIcon />
+                )}
+                <span>{social.label}</span>
               </a>
             ))}
-          </nav>
-        </div>
-
-        <div>
-          <h2 className="text-sm font-semibold text-white">Connect</h2>
-          <address className="mt-5 space-y-3 not-italic">
-            <FooterContact icon={Mail} href={`mailto:${company.email}`}>
-              {company.email}
-            </FooterContact>
-            <FooterContact icon={Phone} href={`tel:${company.phone.replace(/\s/g, "")}`}>
-              {company.phone}
-            </FooterContact>
-            <FooterContact icon={MapPin}>{company.address}</FooterContact>
-            <FooterContact icon={Globe2} href={company.website}>
-              indoteksaft.co.id
-            </FooterContact>
-          </address>
+          </div>
         </div>
       </Container>
-
-      <div className="border-t border-white/[0.06]">
-        <Container className="flex flex-col gap-2 py-6 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {currentYear} {company.legalName}. All rights reserved.
-          </p>
-          <p>Secure by design · Built for Indonesia</p>
-        </Container>
-      </div>
     </footer>
   );
 }
 
-type FooterContactProps = {
-  icon: React.ComponentType<{ className?: string; size?: number }>;
-  href?: string;
-  children: React.ReactNode;
-};
-
-function FooterContact({ icon: Icon, href, children }: FooterContactProps) {
-  const content = (
-    <>
-      <Icon aria-hidden="true" className="mt-0.5 shrink-0 text-blue-500" size={15} />
-      <span>{children}</span>
-    </>
+function LinkedinIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="size-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M8 11v6" />
+      <path d="M8 8v.01" />
+      <path d="M12 17v-6" />
+      <path d="M16 17v-3.4a2.6 2.6 0 0 0-5.2 0" />
+      <rect x="4" y="4" width="16" height="16" rx="2" />
+    </svg>
   );
+}
 
-  if (href) {
-    return (
-      <a
-        href={href}
-        target={href.startsWith("http") ? "_blank" : undefined}
-        rel={href.startsWith("http") ? "noreferrer" : undefined}
-        className="flex gap-2 text-sm text-slate-500 transition hover:text-cyan-300"
-      >
-        {content}
-      </a>
-    );
-  }
-
-  return <p className="flex gap-2 text-sm text-slate-500">{content}</p>;
+function InstagramIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="size-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="4" y="4" width="16" height="16" rx="4" />
+      <circle cx="12" cy="12" r="3.2" />
+      <path d="M16.8 7.2h.01" />
+    </svg>
+  );
 }
