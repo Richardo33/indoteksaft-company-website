@@ -7,13 +7,13 @@ export function SiteFooter() {
 
   return (
     <footer className="bg-white text-slate-700">
-      <Container className="pb-14 pt-0 sm:pb-16 lg:pb-20">
+      <Container className="pb-12 pt-0 sm:pb-14 lg:pb-16">
         <div className="pt-12">
-          <div className="grid gap-12 lg:grid-cols-[1.35fr_2fr]">
+          <div className="grid gap-12 lg:grid-cols-[1.05fr_1.95fr] lg:gap-20">
             <div>
-              <BrandMark className="text-slate-950" />
+              <BrandMark tone="dark" />
 
-              <div className="mt-8 space-y-4 text-sm leading-7">
+              <div className="mt-7 space-y-4 text-sm leading-7">
                 <p className="font-bold text-slate-950">{company.legalName}</p>
                 <address className="not-italic text-slate-500">
                   {company.footerAddress.map((line) => (
@@ -32,34 +32,34 @@ export function SiteFooter() {
 
             <nav
               aria-label="Footer navigation"
-              className="grid gap-10 sm:grid-cols-3"
+              className="grid gap-10 sm:grid-cols-3 lg:gap-14"
             >
               {company.footerLinks.map((group) => (
                 <div key={group.title}>
-                  <h2 className="text-sm font-bold uppercase text-slate-950">
-                    {group.title}
+                  <h2 className="text-sm font-bold text-slate-950">
+                    {group.title === "Resources"
+                      ? group.title
+                      : group.title.toUpperCase()}
                   </h2>
-                  <ul className="mt-5 space-y-4">
-                    {group.links
-                      .filter((link) => link.href !== "#")
-                      .map((link) => (
-                        <li key={`${group.title}-${link.label}`}>
-                          <a
-                            href={link.href}
-                            className="text-sm text-slate-500 transition hover:text-blue-600"
-                          >
-                            {link.label}
-                          </a>
-                        </li>
-                      ))}
+                  <ul className="mt-5 space-y-3.5">
+                    {group.links.map((link) => (
+                      <li key={`${group.title}-${link.label}`}>
+                        <a
+                          href={link.href}
+                          className="text-sm text-slate-500 transition hover:text-blue-600"
+                        >
+                          {link.label}
+                        </a>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               ))}
             </nav>
           </div>
 
-          <div className="mt-14 grid border border-slate-200 text-sm text-slate-400 md:grid-cols-[1fr_auto_auto]">
-            <p className="flex min-h-16 items-center px-7">
+          <div className="mt-12 grid border border-slate-200 text-sm text-slate-400 md:grid-cols-[1fr_auto_auto]">
+            <p className="flex min-h-14 items-center px-7">
               &copy; 2018-{currentYear} {company.legalName}. All rights reserved.
             </p>
 
@@ -69,7 +69,7 @@ export function SiteFooter() {
                 href={social.href}
                 target="_blank"
                 rel="noreferrer"
-                className="flex min-h-16 items-center gap-3 border-t border-slate-200 px-7 transition hover:bg-slate-50 hover:text-blue-600 md:border-l md:border-t-0"
+                className="flex min-h-14 items-center gap-3 border-t border-slate-200 px-7 transition hover:bg-slate-50 hover:text-blue-600 md:border-l md:border-t-0"
               >
                 {social.label === "Linkedin" ? (
                   <LinkedinIcon />

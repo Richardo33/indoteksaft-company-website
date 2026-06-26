@@ -25,7 +25,8 @@ export const company = {
   website: "https://www.indoteksaft.co.id",
   email: "info@indoteksaft.co.id",
   phone: "(022) 58999225",
-  address:
+  address: "Soreang, Kab. Bandung, Jawa Barat, Indonesia",
+  officeAddress:
     "Jl. Raya Gading Tutuka No.103, Parungserab, Kec. Soreang, Kabupaten Bandung, Jawa Barat 40921",
   footerAddress: [
     "Jl. Raya Gading Tutuka No.103,",
@@ -44,32 +45,41 @@ export const company = {
     {
       title: "Services",
       links: [
-        { label: "IT Infrastructure Solutions", href: "/solutions#infrastructure" },
+        {
+          label: "IT Infrastructure Solutions",
+          href: "/solutions#infrastructure",
+        },
         { label: "Tech Delivery Solutions", href: "/solutions#delivery" },
-        { label: "Telecommunication Solutions", href: "/solutions#telecommunication" },
+        {
+          label: "Telecommunication Solutions",
+          href: "/solutions#telecommunication",
+        },
       ],
     },
     {
       title: "Company",
       links: [
         { label: "About Us", href: "/company" },
-        { label: "Careers", href: "#" },
-        { label: "Terms & Conditions", href: "#" },
-        { label: "Privacy Policy", href: "#" },
+        { label: "Careers", href: "/careers" },
+        { label: "Terms & Conditions", href: "/terms-and-conditions" },
+        { label: "Privacy Policy", href: "/privacy-policy" },
       ],
     },
     {
       title: "Resources",
       links: [
         { label: "Portfolio", href: "/resources/portfolio" },
-        { label: "Brosur", href: "#" },
+        { label: "Brosur", href: "/resources/brosur" },
         { label: "Blog", href: "/articles" },
-        { label: "Event", href: "#" },
+        { label: "Event", href: "/resources/event" },
       ],
     },
   ],
   socialLinks: [
-    { label: "Linkedin", href: "https://www.linkedin.com" },
+    {
+      label: "Linkedin",
+      href: "https://www.linkedin.com/company/indoteksaft/",
+    },
     {
       label: "Instagram",
       href: "https://www.instagram.com/indoteksaft?igsh=aXhpZzV3eW1pN2hx",

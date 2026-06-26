@@ -68,6 +68,7 @@ export type CompanyConfig = {
   readonly email: string;
   readonly phone: string;
   readonly address: string;
+  readonly officeAddress: string;
   readonly footerAddress: readonly string[];
   readonly establishedYear: number;
   readonly navItems: readonly NavItem[];

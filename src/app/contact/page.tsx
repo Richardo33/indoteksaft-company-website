@@ -96,7 +96,7 @@ export default function ContactPage() {
                   Office Location
                 </span>
                 <p className="mt-1 text-sm leading-6 text-slate-500">
-                  {company.address}
+                  {company.officeAddress}
                 </p>
               </div>
             </div>
