@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+import { resourceMenuItems } from "@/config/resources";
 import type { NavItem } from "@/types/company";
 
 type MobileNavigationProps = {
@@ -12,6 +13,7 @@ type MobileNavigationProps = {
 
 export function MobileNavigation({ items }: MobileNavigationProps) {
   const [open, setOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
 
   return (
     <div className="lg:hidden">
@@ -32,21 +34,56 @@ export function MobileNavigation({ items }: MobileNavigationProps) {
           aria-label="Navigasi mobile"
           className="absolute inset-x-5 top-[4.75rem] rounded-2xl border border-white/10 bg-slate-950/95 p-3 shadow-2xl shadow-black/30 backdrop-blur-xl"
         >
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-blue-500/10 hover:text-cyan-300"
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {items.map((item) => {
+            if (item.label === "Resources") {
+              return (
+                <div key={item.label}>
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium text-slate-200 transition hover:bg-blue-500/10 hover:text-cyan-300"
+                    aria-expanded={resourcesOpen}
+                    onClick={() => setResourcesOpen((current) => !current)}
+                  >
+                    {item.label}
+                    <span className="text-xs text-slate-500">
+                      {resourcesOpen ? "Close" : "Open"}
+                    </span>
+                  </button>
+
+                  {resourcesOpen && (
+                    <div className="ml-3 space-y-1 border-l border-white/10 pl-3">
+                      {resourceMenuItems.map((resource) => (
+                        <Link
+                          key={resource.href}
+                          href={resource.href}
+                          className="block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-blue-500/10 hover:text-cyan-300"
+                          onClick={() => setOpen(false)}
+                        >
+                          {resource.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-blue-500/10 hover:text-cyan-300"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
           <span className="block rounded-xl px-4 py-3 text-sm font-medium uppercase text-slate-400">
             English
           </span>
           <Link
-            href="/#contact"
+            href="/contact"
             className="mt-2 block rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white"
             onClick={() => setOpen(false)}
           >

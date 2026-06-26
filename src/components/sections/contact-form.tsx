@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, LoaderCircle } from "lucide-react";
 import { useState } from "react";
+import type { ReactNode } from "react";
 import { useForm } from "react-hook-form";
 
 import { submitContact } from "@/lib/api-client";
@@ -21,7 +22,28 @@ const industries = [
   "Other",
 ] as const;
 
-export function ContactForm() {
+type ContactFormProps = {
+  emailLabel?: string;
+  messageLabel?: string;
+  messagePlaceholder?: string;
+  submitLabel?: string;
+  variant?: "card" | "plain";
+  className?: string;
+};
+
+const formVariantClass = {
+  card: "rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8 lg:p-10",
+  plain: "bg-transparent",
+} as const;
+
+export function ContactForm({
+  emailLabel = "Email",
+  messageLabel = "Project Requirement",
+  messagePlaceholder = "Describe your project needs...\n- Current challenge\n- Expected timeline\n- Required solution",
+  submitLabel = "Book Consultation",
+  variant = "card",
+  className = "",
+}: ContactFormProps) {
   const [result, setResult] = useState<ContactApiResponse | null>(null);
   const {
     register,
@@ -65,7 +87,7 @@ export function ContactForm() {
     <form
       onSubmit={onSubmit}
       noValidate
-      className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-8 lg:p-10"
+      className={`${formVariantClass[variant]} ${className}`}
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Full Name" error={errors.name?.message}>
@@ -86,7 +108,7 @@ export function ContactForm() {
           />
         </Field>
 
-        <Field label="Email" error={errors.email?.message}>
+        <Field label={emailLabel} error={errors.email?.message}>
           <input
             {...register("email")}
             type="email"
@@ -129,12 +151,12 @@ export function ContactForm() {
       </div>
 
       <div className="mt-5">
-        <Field label="Project Requirement" error={errors.message?.message}>
+        <Field label={messageLabel} error={errors.message?.message}>
           <textarea
             {...register("message")}
             rows={5}
             className="consultation-control resize-none py-3"
-            placeholder={"Describe your project needs...\n- Current challenge\n- Expected timeline\n- Required solution"}
+            placeholder={messagePlaceholder}
           />
         </Field>
       </div>
@@ -183,7 +205,7 @@ export function ContactForm() {
             Sending...
           </>
         ) : (
-          "Book Consultation"
+          submitLabel
         )}
       </button>
     </form>
@@ -193,7 +215,7 @@ export function ContactForm() {
 type FieldProps = {
   label: string;
   error?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 function Field({ label, error, children }: FieldProps) {

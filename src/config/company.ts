@@ -24,8 +24,9 @@ export const company = {
     "Membangun ekosistem teknologi end-to-end untuk infrastruktur kritikal, keamanan siber, cloud, data, dan transformasi digital berskala nasional.",
   website: "https://www.indoteksaft.co.id",
   email: "info@indoteksaft.co.id",
-  phone: "+62 21 0000 0000",
-  address: "Soreang, Kab. Bandung, Jawa Barat, Indonesia",
+  phone: "(022) 58999225",
+  address:
+    "Jl. Raya Gading Tutuka No.103, Parungserab, Kec. Soreang, Kabupaten Bandung, Jawa Barat 40921",
   footerAddress: [
     "Jl. Raya Gading Tutuka No.103,",
     "Soreang, Kab. Bandung, Jawa Barat",
@@ -35,23 +36,23 @@ export const company = {
   navItems: [
     { label: "Products", href: "/products" },
     { label: "Solutions", href: "/solutions" },
-    { label: "Industries", href: "/#industries" },
-    { label: "Resources", href: "/articles" },
-    { label: "Company", href: "/#company" },
+    { label: "Industries", href: "/industries" },
+    { label: "Resources", href: "/resources" },
+    { label: "Company", href: "/company" },
   ],
   footerLinks: [
     {
       title: "Services",
       links: [
-        { label: "IT Infrastructure Solutions", href: "/solutions" },
-        { label: "Tech Delivery Solutions", href: "/solutions" },
-        { label: "Telecommunication Solutions", href: "/solutions" },
+        { label: "IT Infrastructure Solutions", href: "/solutions#infrastructure" },
+        { label: "Tech Delivery Solutions", href: "/solutions#delivery" },
+        { label: "Telecommunication Solutions", href: "/solutions#telecommunication" },
       ],
     },
     {
       title: "Company",
       links: [
-        { label: "About Us", href: "#company" },
+        { label: "About Us", href: "/company" },
         { label: "Careers", href: "#" },
         { label: "Terms & Conditions", href: "#" },
         { label: "Privacy Policy", href: "#" },
@@ -60,7 +61,7 @@ export const company = {
     {
       title: "Resources",
       links: [
-        { label: "Portfolio", href: "#resources" },
+        { label: "Portfolio", href: "/resources/portfolio" },
         { label: "Brosur", href: "#" },
         { label: "Blog", href: "/articles" },
         { label: "Event", href: "#" },

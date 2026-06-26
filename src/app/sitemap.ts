@@ -26,6 +26,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${env.SITE_URL}/industries`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${env.SITE_URL}/company`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    },
+    {
+      url: `${env.SITE_URL}/contact`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    },
     ...productCatalog.map((product) => ({
       url: `${env.SITE_URL}/products/${product.slug}`,
       lastModified: now,
@@ -37,6 +55,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.8,
+    },
+    {
+      url: `${env.SITE_URL}/resources`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    },
+    {
+      url: `${env.SITE_URL}/resources/portfolio`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${env.SITE_URL}/resources/client`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.6,
     },
     ...articles.map((article) => ({
       url: `${env.SITE_URL}/articles/${article.slug}`,

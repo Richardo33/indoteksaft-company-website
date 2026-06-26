@@ -9,7 +9,7 @@ import {
   RadioTower,
   ServerCog,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { solutionTabs, type SolutionTabId } from "@/config/solutions";
 
@@ -26,6 +26,27 @@ export function SolutionsTabs() {
   const activeSolution =
     solutionTabs.find((solution) => solution.id === activeId) ?? solutionTabs[0];
   const HeroIcon = tabIcons[activeSolution.id];
+
+  useEffect(() => {
+    const syncTabFromHash = () => {
+      const hash = window.location.hash.replace("#", "");
+      const selectedTab = solutionTabs.find((solution) => solution.id === hash);
+
+      if (selectedTab) {
+        setActiveId(selectedTab.id);
+      }
+    };
+
+    syncTabFromHash();
+    window.addEventListener("hashchange", syncTabFromHash);
+
+    return () => window.removeEventListener("hashchange", syncTabFromHash);
+  }, []);
+
+  const handleTabChange = (id: SolutionTabId) => {
+    setActiveId(id);
+    window.history.replaceState(null, "", `#${id}`);
+  };
 
   return (
     <div className="mt-12">
@@ -50,7 +71,7 @@ export function SolutionsTabs() {
                   ? "bg-blue-600 text-white"
                   : "bg-white text-slate-400 hover:bg-slate-50 hover:text-blue-600"
               }`}
-              onClick={() => setActiveId(solution.id)}
+              onClick={() => handleTabChange(solution.id)}
             >
               <Icon aria-hidden="true" size={20} />
               {solution.label}

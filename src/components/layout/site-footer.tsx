@@ -40,16 +40,18 @@ export function SiteFooter() {
                     {group.title}
                   </h2>
                   <ul className="mt-5 space-y-4">
-                    {group.links.map((link) => (
-                      <li key={`${group.title}-${link.label}`}>
-                        <a
-                          href={link.href}
-                          className="text-sm text-slate-500 transition hover:text-blue-600"
-                        >
-                          {link.label}
-                        </a>
-                      </li>
-                    ))}
+                    {group.links
+                      .filter((link) => link.href !== "#")
+                      .map((link) => (
+                        <li key={`${group.title}-${link.label}`}>
+                          <a
+                            href={link.href}
+                            className="text-sm text-slate-500 transition hover:text-blue-600"
+                          >
+                            {link.label}
+                          </a>
+                        </li>
+                      ))}
                   </ul>
                 </div>
               ))}

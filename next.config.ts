@@ -8,6 +8,7 @@ const contentSecurityPolicy = [
   "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
+  "frame-src 'self' https://www.google.com https://maps.google.com",
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",

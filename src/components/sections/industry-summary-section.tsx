@@ -46,7 +46,7 @@ export function IndustrySummarySection() {
               efficiency, and business growth across multiple sectors.
             </p>
             <a
-              href="#industries"
+              href="/industries"
               className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 border border-blue-600 px-7 text-sm font-semibold text-blue-600 transition hover:bg-blue-600 hover:text-white"
             >
               All Industries
@@ -61,7 +61,7 @@ export function IndustrySummarySection() {
               return (
                 <li key={industry.label}>
                   <a
-                    href="#industries"
+                    href="/industries"
                     className="inline-flex min-h-12 items-center gap-3 bg-cyan-50 px-6 text-sm font-medium text-slate-600 transition hover:bg-blue-600 hover:text-white"
                   >
                     <Icon

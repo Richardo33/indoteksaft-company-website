@@ -4,6 +4,7 @@ import Link from "next/link";
 import { company } from "@/config/company";
 import { Container } from "@/components/shared/container";
 import { BrandMark } from "@/components/shared/brand-mark";
+import { DesktopNavigation } from "@/components/layout/desktop-navigation";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
 
 export function SiteHeader() {
@@ -14,17 +15,7 @@ export function SiteHeader() {
           <BrandMark />
         </Link>
 
-        <nav aria-label="Navigasi utama" className="hidden items-center gap-7 lg:flex">
-          {company.navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium text-slate-400 transition-colors hover:text-cyan-300"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <DesktopNavigation items={company.navItems} />
 
         <div className="hidden items-center gap-5 lg:flex">
           <span className="inline-flex items-center gap-2 text-xs font-medium uppercase text-slate-300">
@@ -32,7 +23,7 @@ export function SiteHeader() {
             English
           </span>
           <Link
-            href="/#contact"
+            href="/contact"
             className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold uppercase text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-500"
           >
             Contact Sales
