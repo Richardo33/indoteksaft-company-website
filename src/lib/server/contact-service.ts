@@ -2,6 +2,7 @@ import "server-only";
 
 import type { ContactPayload } from "@/lib/contact-schema";
 import { formatProjectRequirement } from "@/lib/server/contact-format";
+import { saveContactSubmission } from "@/lib/server/contact-repository";
 import { env } from "@/lib/server/env";
 import { logger } from "@/lib/server/logger";
 
@@ -10,6 +11,11 @@ export async function deliverContact(
   requestId: string,
 ): Promise<void> {
   const formattedRequirement = formatProjectRequirement(payload.message);
+  await saveContactSubmission({
+    payload,
+    requestId,
+    formattedRequirement,
+  });
 
   if (!env.CONTACT_WEBHOOK_URL) {
     logger.info("contact.accepted_dummy", {

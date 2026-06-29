@@ -21,7 +21,15 @@ function closeList(currentList: "ul" | "ol" | null, html: string[]) {
   return null;
 }
 
-export function formatProjectRequirement(message: string) {
+export type FormattedProjectRequirement = {
+  text: string;
+  html: string;
+  lines: string[];
+};
+
+export function formatProjectRequirement(
+  message: string,
+): FormattedProjectRequirement {
   const normalizedText = message.replace(/\r\n?/g, "\n");
   const lines = normalizedText.split("\n");
   const html: string[] = [];

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
+import { LanguageProvider } from "@/components/i18n/language-provider";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { company } from "@/config/company";
@@ -97,9 +98,11 @@ export default function RootLayout({
         >
           Lewati ke konten utama
         </a>
-        <SiteHeader />
-        <div id="main-content">{children}</div>
-        <SiteFooter />
+        <LanguageProvider>
+          <SiteHeader />
+          <div id="main-content">{children}</div>
+          <SiteFooter />
+        </LanguageProvider>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: organizationSchema }}

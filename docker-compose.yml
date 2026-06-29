@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: indoteksaft-company-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-indoteksaft_company}
+      POSTGRES_USER: ${DB_USER:-indoteksaft}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change-this-database-password}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-indoteksaft} -d ${DB_NAME:-indoteksaft_company}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - indoteksaft-network
+
+  website:
+    image: indoteksaft/company-website:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: indoteksaft-company-website
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      SITE_URL: ${SITE_URL:-http://localhost:3000}
+      CONTACT_ALLOWED_ORIGIN: ${CONTACT_ALLOWED_ORIGIN:-http://localhost:3000}
+      CONTACT_WEBHOOK_URL: ${CONTACT_WEBHOOK_URL:-}
+      CONTACT_WEBHOOK_TOKEN: ${CONTACT_WEBHOOK_TOKEN:-}
+      CONTACT_DATABASE_ENABLED: "true"
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-indoteksaft_company}
+      DB_USER: ${DB_USER:-indoteksaft}
+      DB_PASSWORD: ${DB_PASSWORD:-change-this-database-password}
+      DB_SSLMODE: disable
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-5}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
+      NEXT_PUBLIC_SANITY_PROJECT_ID: ${NEXT_PUBLIC_SANITY_PROJECT_ID:-}
+      NEXT_PUBLIC_SANITY_DATASET: ${NEXT_PUBLIC_SANITY_DATASET:-production}
+      SANITY_SYNC_SECRET: ${SANITY_SYNC_SECRET:-change-this-sanity-sync-secret-min-24-chars}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - indoteksaft-network
+
+volumes:
+  postgres-data:
+
+networks:
+  indoteksaft-network:
+    driver: bridge

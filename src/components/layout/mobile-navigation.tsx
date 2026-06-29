@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+import { LanguageSelector } from "@/components/i18n/language-selector";
 import { resourceMenuItems } from "@/config/resources";
 import type { NavItem } from "@/types/company";
 
@@ -79,9 +80,7 @@ export function MobileNavigation({ items }: MobileNavigationProps) {
               </Link>
             );
           })}
-          <span className="block rounded-xl px-4 py-3 text-sm font-medium uppercase text-slate-400">
-            English
-          </span>
+          <LanguageSelector variant="mobile" />
           <Link
             href="/contact"
             className="mt-2 block rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white"

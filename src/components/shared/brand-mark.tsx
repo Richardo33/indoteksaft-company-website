@@ -18,6 +18,7 @@ export function BrandMark({
       <span
         className={cn("inline-flex items-center gap-2.5", className)}
         aria-label="Indoteksaft"
+        data-i18n-skip
       >
         <Image
           src="/images/indoteksaft-mark.svg"
@@ -36,7 +37,7 @@ export function BrandMark({
   }
 
   return (
-    <span className={cn("inline-flex items-center", className)}>
+    <span className={cn("inline-flex items-center", className)} data-i18n-skip>
       <Image
         src="/images/indoteksaft-logo.svg"
         alt="Indoteksaft"

@@ -11,9 +11,10 @@ const contentSecurityPolicy = [
   "frame-src 'self' https://www.google.com https://maps.google.com",
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https://cdn.sanity.io",
   "font-src 'self' data:",
-  `connect-src 'self'${isDevelopment ? " ws: wss:" : ""}`,
+  `connect-src 'self' https://api.sanity.io https://*.api.sanity.io https://apicdn.sanity.io https://*.apicdn.sanity.io https://cdn.sanity.io${isDevelopment ? " ws: wss:" : ""}`,
+  "worker-src 'self' blob:",
 ].join("; ");
 
 const securityHeaders = [
@@ -36,6 +37,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,

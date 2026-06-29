@@ -79,12 +79,12 @@ export function RotatingTypeText({
   }
 
   return (
-    <>
+    <span data-i18n-skip>
       <span className="sr-only">{words[0]}</span>
       <span aria-hidden="true" className={className}>
         <span>{prefersReducedMotion ? words[0] : visibleText}</span>
         {!prefersReducedMotion && <span className="type-cursor" />}
       </span>
-    </>
+    </span>
   );
 }

@@ -1,0 +1,203 @@
+export type Locale = "en" | "id";
+
+export const localeLabels = {
+  en: "English",
+  id: "Bahasa Indonesia",
+} as const satisfies Record<Locale, string>;
+
+export const defaultLocale: Locale = "en";
+
+export const enToId = {
+  // Navigation
+  Products: "Produk",
+  Solutions: "Solusi",
+  Industries: "Industri",
+  Resources: "Sumber Daya",
+  Company: "Perusahaan",
+  "Contact Sales": "Hubungi Sales",
+  "Portfolio Project": "Proyek Portofolio",
+  Client: "Klien",
+  "Blog & Article": "Blog & Artikel",
+  Open: "Buka",
+  Close: "Tutup",
+  English: "Bahasa Inggris",
+
+  // Hero
+  "Indonesia's critical tech partner": "Mitra teknologi kritikal Indonesia",
+  Delivering: "Menghadirkan",
+  "Defense-Grade Infrastructure": "Infrastruktur Kelas Pertahanan",
+  "Sovereign Cloud Platforms": "Platform Sovereign Cloud",
+  "Mission-Critical Cybersecurity": "Keamanan Siber Mission-Critical",
+  "AI-Driven Operations": "Operasi Berbasis AI",
+  "at National Scale": "Berskala Nasional",
+  "Start Free Consultation": "Mulai Konsultasi Gratis",
+  "Explore Solutions": "Jelajahi Solusi",
+  "engineers end-to-end technology ecosystems from": "membangun ekosistem teknologi end-to-end dari",
+  "datacenter design to AI-driven operations trusted by 200+": "desain datacenter hingga operasi berbasis AI yang dipercaya oleh 200+",
+  "organizations across Indonesia's most critical sectors.": "organisasi di sektor paling kritikal Indonesia.",
+
+  // Metrics
+  "Years Experience": "Tahun Pengalaman",
+  "Organizations Served": "Organisasi Dilayani",
+  "Project Delivered": "Proyek Terkirim",
+  "Client Satisfaction": "Kepuasan Klien",
+
+  // Sections
+  "Trusted across industries": "Dipercaya lintas industri",
+  "Technology Solutions for Every Industry": "Solusi Teknologi untuk Setiap Industri",
+  "Building a strong digital foundation to support innovation, efficiency, and business growth across multiple sectors.": "Membangun fondasi digital yang kuat untuk mendukung inovasi, efisiensi, dan pertumbuhan bisnis di berbagai sektor.",
+  "All Industries": "Semua Industri",
+  "What we do": "Yang Kami Kerjakan",
+  "End-to-End Technology Solutions": "Solusi Teknologi End-to-End",
+  "From building resilient digital infrastructure to delivering intelligent technology solutions, our core capabilities empower every stage of your digital transformation.": "Dari membangun infrastruktur digital yang tangguh hingga menghadirkan solusi teknologi cerdas, kapabilitas inti kami mendukung setiap tahap transformasi digital Anda.",
+  "Detail Solutions": "Detail Solusi",
+  "Enterprise Software Solutions": "Solusi Perangkat Lunak Enterprise",
+  "Scalable software products engineered to help organizations innovate faster, improve efficiency, and stay ahead in a digital-first world.": "Produk software scalable yang dirancang untuk membantu organisasi berinovasi lebih cepat, meningkatkan efisiensi, dan tetap unggul di dunia digital-first.",
+  "All Products": "Semua Produk",
+  "Our advantages": "Keunggulan Kami",
+  "Building Long-Term Digital Success": "Membangun Keberhasilan Digital Jangka Panjang",
+  "We partner with organizations to deliver reliable technology, exceptional service, and sustainable innovation that drives long-term business growth.": "Kami bermitra dengan organisasi untuk menghadirkan teknologi andal, layanan unggul, dan inovasi berkelanjutan yang mendorong pertumbuhan bisnis jangka panjang.",
+  Framework: "Kerangka Kerja",
+  "Digital Transformation Journey": "Perjalanan Transformasi Digital",
+  "Our proven 5-step methodology for enterprise-scale digital transformation.": "Metodologi 5 langkah kami yang terbukti untuk transformasi digital skala enterprise.",
+  "Knowledge Center": "Pusat Pengetahuan",
+  "Technology Insights & Resources": "Insight & Sumber Daya Teknologi",
+  "Stay informed with the latest technology trends, industry insights, best practices, and expert perspectives to support your digital transformation journey.": "Ikuti tren teknologi terbaru, insight industri, praktik terbaik, dan perspektif ahli untuk mendukung perjalanan transformasi digital Anda.",
+  "View All Articles": "Lihat Semua Artikel",
+
+  // Solution cards
+  "IT Infrastructure Solutions": "Solusi Infrastruktur TI",
+  "Tech Delivery Solutions": "Solusi Delivery Teknologi",
+  "Telecommunication Solutions": "Solusi Telekomunikasi",
+  "Comprehensive infrastructure solutions designed to optimize performance, strengthen security, and support the evolving needs of modern enterprises.": "Solusi infrastruktur komprehensif untuk mengoptimalkan performa, memperkuat keamanan, dan mendukung kebutuhan enterprise modern yang terus berkembang.",
+  "Comprehensive technology delivery services that transform business requirements into secure, scalable, and future-ready digital solutions.": "Layanan delivery teknologi komprehensif yang mengubah kebutuhan bisnis menjadi solusi digital yang aman, scalable, dan siap masa depan.",
+  "Comprehensive telecommunications services to support network development, infrastructure maintenance, and reliable connectivity.": "Layanan telekomunikasi komprehensif untuk mendukung pengembangan jaringan, pemeliharaan infrastruktur, dan konektivitas andal.",
+  "Secure & Reliable Infrastructure": "Infrastruktur Aman & Andal",
+  "High Availability & Scalability": "Ketersediaan Tinggi & Skalabilitas",
+  "24/7 Monitoring & Support": "Monitoring & Dukungan 24/7",
+  "Custom Development": "Pengembangan Kustom",
+  "Scalable Architecture": "Arsitektur Scalable",
+  "End-to-End Delivery": "Delivery End-to-End",
+  "BTS Installation & Upgrade": "Instalasi & Upgrade BTS",
+  "Site Maintenance": "Pemeliharaan Site",
+  "Civil, Mechanical & Electrical (CME)": "Sipil, Mekanikal & Elektrikal (CME)",
+  "Core Capabilities": "Kapabilitas Inti",
+
+  // Industries
+  "Government & BUMN": "Pemerintah & BUMN",
+  Manufacturing: "Manufaktur",
+  Education: "Pendidikan",
+  Healthcare: "Kesehatan",
+  Telecommunication: "Telekomunikasi",
+  Enterprise: "Enterprise",
+  "Banking & Financial Services": "Perbankan & Layanan Keuangan",
+  Agriculture: "Pertanian",
+  Government: "Pemerintahan",
+  Defense: "Pertahanan",
+
+  // Contact
+  "Get started": "Mulai",
+  "Free Consultation": "Konsultasi Gratis",
+  "Schedule a consultation with our technology architects to discuss your infrastructure needs and digital transformation roadmap.": "Jadwalkan konsultasi dengan arsitek teknologi kami untuk membahas kebutuhan infrastruktur dan roadmap transformasi digital Anda.",
+  Email: "Email",
+  Location: "Lokasi",
+  "Download Company Profile": "Unduh Profil Perusahaan",
+  "Full capabilities overview (PDF)": "Ringkasan kapabilitas lengkap (PDF)",
+  "Request Assessment": "Minta Assessment",
+  "Get a comprehensive infrastructure audit": "Dapatkan audit infrastruktur komprehensif",
+  "Full Name": "Nama Lengkap",
+  "Your name": "Nama Anda",
+  "Company name": "Nama perusahaan",
+  Position: "Jabatan",
+  "Your role": "Peran Anda",
+  Phone: "Telepon",
+  Industry: "Industri",
+  "Project Requirement": "Kebutuhan Proyek",
+  "Describe your project needs...": "Jelaskan kebutuhan proyek Anda...",
+  "Current challenge": "Tantangan saat ini",
+  "Expected timeline": "Timeline yang diharapkan",
+  "Required solution": "Solusi yang dibutuhkan",
+  "Book Consultation": "Booking Konsultasi",
+  Sending: "Mengirim",
+  "Sending...": "Mengirim...",
+  "Work Email": "Email Kerja",
+  Message: "Pesan",
+  Submit: "Kirim",
+  "write a message here...": "tulis pesan di sini...",
+  "Contact us": "Hubungi kami",
+  "Ready to Transform Your Business?": "Siap Mentransformasi Bisnis Anda?",
+  "Share your requirements through the form, and our specialists will help you identify the best technology solutions.": "Bagikan kebutuhan Anda melalui form, dan spesialis kami akan membantu mengidentifikasi solusi teknologi terbaik.",
+  "Whatsapp Only": "WhatsApp Saja",
+  "Chat directly with our sales team": "Chat langsung dengan tim sales kami",
+  "Email Us": "Email Kami",
+  "Call Us": "Telepon Kami",
+  "Office Location": "Lokasi Kantor",
+
+  // Footer / legal / placeholder pages
+  Services: "Layanan",
+  SERVICES: "LAYANAN",
+  COMPANY: "PERUSAHAAN",
+  Careers: "Karier",
+  "Terms & Conditions": "Syarat & Ketentuan",
+  "Privacy Policy": "Kebijakan Privasi",
+  Portfolio: "Portofolio",
+  Brosur: "Brosur",
+  Blog: "Blog",
+  Event: "Event",
+  "All rights reserved.": "Seluruh hak cipta dilindungi.",
+  "Empowering Digital Transformation.": "Memberdayakan Transformasi Digital.",
+  "Make it Happen, Make it Matter.": "Make it Happen, Make it Matter.",
+  "Page content is being prepared": "Konten halaman sedang disiapkan",
+  "Halaman ini sudah disiapkan sebagai entry point resmi dan akan dikembangkan lebih lanjut ketika konten final tersedia.": "Halaman ini sudah disiapkan sebagai entry point resmi dan akan dikembangkan lebih lanjut ketika konten final tersedia.",
+
+  // Product detail / resources
+  "Detail Product": "Detail Produk",
+  Features: "Fitur",
+  FEATURES: "FITUR",
+  "Benefit for Business": "Manfaat untuk Bisnis",
+  "BENEFIT FOR BUSINESS": "MANFAAT UNTUK BISNIS",
+  "Download Brosur": "Unduh Brosur",
+  "Request Demo": "Minta Demo",
+  "Project Experience": "Pengalaman Proyek",
+  "Building Long-Term Technology Partnerships": "Membangun Kemitraan Teknologi Jangka Panjang",
+  "Our Clients": "Klien Kami",
+  "Client Experience": "Pengalaman Klien",
+  "Upcoming events, webinars, and technology sessions by Indoteksaft.": "Event, webinar, dan sesi teknologi terbaru dari Indoteksaft.",
+
+  // Company page
+  "About Indoteksaft": "Tentang Indoteksaft",
+  "Make it": "Make it",
+  Happen: "Happen",
+  "Make it Matter.": "Make it Matter.",
+  "Vision & Mission": "Visi & Misi",
+  "Our Vision": "Visi Kami",
+  "Our Mission": "Misi Kami",
+  "To become a leading technology company in Indonesia delivering excellent, innovative, and impactful digital solutions for business and society.": "Menjadi perusahaan teknologi terkemuka di Indonesia yang menghadirkan solusi digital unggul, inovatif, dan berdampak bagi bisnis dan masyarakat.",
+  "To provide IT solutions that improve our clients' efficiency, profitability, and competitiveness through high-quality services powered by AI, IoT, and sustainable digital innovation.": "Menyediakan solusi TI yang meningkatkan efisiensi, profitabilitas, dan daya saing klien melalui layanan berkualitas tinggi berbasis AI, IoT, dan inovasi digital berkelanjutan.",
+  "Our Core Values": "Nilai Inti Kami",
+  Solution: "Solusi",
+  Integrity: "Integritas",
+  Professionalism: "Profesionalisme",
+  Improvement: "Peningkatan",
+  "Simplifying problems by providing the right solutions to customers.": "Menyederhanakan masalah dengan memberikan solusi yang tepat kepada pelanggan.",
+  "Committed to providing maximum service to customers so as to maintain long-term cooperative relationships.": "Berkomitmen memberikan layanan maksimal kepada pelanggan untuk menjaga hubungan kerja sama jangka panjang.",
+  "Developing competent human resources with the ability to face challenges and bring success to the company.": "Mengembangkan sumber daya manusia kompeten yang mampu menghadapi tantangan dan membawa kesuksesan bagi perusahaan.",
+  "Conducting continuous improvements that drive the company's business development.": "Melakukan peningkatan berkelanjutan yang mendorong pengembangan bisnis perusahaan.",
+  Leadership: "Kepemimpinan",
+  "Executive Leadership": "Pimpinan Eksekutif",
+  "Meet the leaders driving innovation, digital transformation, and technological excellence at Indoteksaft.": "Kenali para pemimpin yang mendorong inovasi, transformasi digital, dan keunggulan teknologi di Indoteksaft.",
+  "CEO & Co-Founder": "CEO & Co-Founder",
+  "Director & Co-Founder": "Direktur & Co-Founder",
+} as const;
+
+export const idToEn = Object.fromEntries(
+  Object.entries(enToId).map(([en, id]) => [id, en]),
+) as Record<string, string>;
+
+export function translateExact(value: string, locale: Locale) {
+  if (locale === "id") {
+    return enToId[value as keyof typeof enToId] ?? value;
+  }
+
+  return idToEn[value] ?? value;
+}

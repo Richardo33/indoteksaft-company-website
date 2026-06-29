@@ -1,19 +1,49 @@
+"use client";
+
 import Image from "next/image";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 
+import { useLanguage } from "@/components/i18n/language-provider";
 import { company } from "@/config/company";
 import { Container } from "@/components/shared/container";
 import { HeroParticles } from "@/components/shared/hero-particles";
 import { RotatingTypeText } from "@/components/shared/rotating-type-text";
 
-const heroRotatingWords = [
-  "Defense-Grade Infrastructure",
-  "Sovereign Cloud Platforms",
-  "Mission-Critical Cybersecurity",
-  "AI-Driven Operations",
-] as const;
+const heroCopy = {
+  en: {
+    eyebrow: "Indonesia's critical tech partner",
+    titlePrefix: "Delivering",
+    rotatingWords: [
+      "Defense-Grade Infrastructure",
+      "Sovereign Cloud Platforms",
+      "Mission-Critical Cybersecurity",
+      "AI-Driven Operations",
+    ],
+    titleSuffix: "at National Scale",
+    description: `${company.legalName} engineers end-to-end technology ecosystems from datacenter design to AI-driven operations trusted by 200+ organizations across Indonesia's most critical sectors.`,
+    primaryCta: "Start Free Consultation",
+    secondaryCta: "Explore Solutions",
+  },
+  id: {
+    eyebrow: "Mitra teknologi kritikal Indonesia",
+    titlePrefix: "Menghadirkan",
+    rotatingWords: [
+      "Infrastruktur Kelas Pertahanan",
+      "Platform Sovereign Cloud",
+      "Keamanan Siber Mission-Critical",
+      "Operasi Berbasis AI",
+    ],
+    titleSuffix: "Berskala Nasional",
+    description: `${company.legalName} membangun ekosistem teknologi end-to-end dari desain datacenter hingga operasi berbasis AI yang dipercaya oleh 200+ organisasi di sektor paling kritikal Indonesia.`,
+    primaryCta: "Mulai Konsultasi Gratis",
+    secondaryCta: "Jelajahi Solusi",
+  },
+} as const;
 
 export function HeroSection() {
+  const { locale } = useLanguage();
+  const copy = heroCopy[locale];
+
   return (
     <section
       id="top"
@@ -37,7 +67,7 @@ export function HeroSection() {
       </div>
 
       <Container className="grid min-h-[650px] items-center py-12 sm:py-14 lg:-translate-y-5">
-        <div className="min-w-0">
+        <div className="min-w-0" data-i18n-skip>
           <div className="mb-7 inline-flex max-w-full items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[0.06] px-3 py-2 sm:px-4">
             <ShieldCheck
               aria-hidden="true"
@@ -45,7 +75,7 @@ export function HeroSection() {
               size={15}
             />
             <span className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-200 sm:text-xs sm:tracking-[0.22em]">
-              Indonesia&apos;s critical tech partner
+              {copy.eyebrow}
             </span>
           </div>
 
@@ -53,20 +83,19 @@ export function HeroSection() {
             id="hero-title"
             className="max-w-4xl text-balance text-[2.65rem] font-bold leading-[1.04] tracking-[-0.055em] text-white sm:text-6xl lg:text-7xl"
           >
-            Delivering
+            {copy.titlePrefix}
             <span className="block min-h-[2.08em] sm:min-h-[2.02em] lg:min-h-[1.98em]">
               <RotatingTypeText
-                words={heroRotatingWords}
+                key={locale}
+                words={copy.rotatingWords}
                 className="bg-gradient-to-r from-blue-500 via-cyan-300 to-blue-400 bg-clip-text text-transparent"
               />
             </span>
-            <span className="block">at National Scale</span>
+            <span className="block">{copy.titleSuffix}</span>
           </h1>
 
           <p className="mt-7 max-w-2xl text-pretty text-base leading-8 text-slate-300/70 sm:text-lg">
-            {company.legalName} engineers end-to-end technology ecosystems from
-            datacenter design to AI-driven operations trusted by 200+
-            organizations across Indonesia&apos;s most critical sectors.
+            {copy.description}
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -74,14 +103,14 @@ export function HeroSection() {
               href="#contact"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 text-sm font-semibold text-white shadow-xl shadow-blue-600/25 transition hover:-translate-y-0.5 hover:bg-blue-500"
             >
-              Start Free Consultation
+              {copy.primaryCta}
               <ArrowRight aria-hidden="true" size={17} />
             </a>
             <a
               href="#solutions"
               className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] px-6 text-sm font-semibold text-white transition hover:border-cyan-300/40 hover:bg-cyan-300/[0.06]"
             >
-              Explore Solutions
+              {copy.secondaryCta}
             </a>
           </div>
         </div>
