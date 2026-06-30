@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS public.contact_submissions (
     email VARCHAR(160) NOT NULL,
     phone VARCHAR(30),
     interest VARCHAR(80) NOT NULL,
+    lead_type VARCHAR(80) NOT NULL DEFAULT 'consultation',
 
     message_text TEXT NOT NULL,
     message_html TEXT NOT NULL,
@@ -53,6 +54,9 @@ CREATE TABLE IF NOT EXISTS public.contact_submissions (
 
     CONSTRAINT contact_submissions_status_check
       CHECK (status IN ('new', 'reviewed', 'contacted', 'qualified', 'closed', 'spam')),
+
+    CONSTRAINT contact_submissions_lead_type_check
+      CHECK (lead_type IN ('consultation', 'company_profile_download', 'contact_sales', 'assessment_request', 'demo_request', 'brochure_request', 'general_inquiry')),
 
     CONSTRAINT contact_submissions_email_lowercase_check
       CHECK (email = lower(email)),
@@ -78,6 +82,28 @@ CREATE INDEX IF NOT EXISTS idx_contact_submissions_interest
 
 CREATE INDEX IF NOT EXISTS idx_contact_submissions_company_name
     ON public.contact_submissions (company_name);
+
+-- Safe migration for databases created from older versions of this script.
+ALTER TABLE public.contact_submissions
+    ADD COLUMN IF NOT EXISTS lead_type VARCHAR(80) NOT NULL DEFAULT 'consultation';
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'contact_submissions_lead_type_check'
+          AND conrelid = 'public.contact_submissions'::regclass
+    ) THEN
+        ALTER TABLE public.contact_submissions
+            ADD CONSTRAINT contact_submissions_lead_type_check
+            CHECK (lead_type IN ('consultation', 'company_profile_download', 'contact_sales', 'assessment_request', 'demo_request', 'brochure_request', 'general_inquiry'));
+    END IF;
+END;
+$$;
+
+CREATE INDEX IF NOT EXISTS idx_contact_submissions_lead_type_created_at
+    ON public.contact_submissions (lead_type, created_at DESC);
 
 -- ------------------------------------------------------------
 -- 2) Updated-at trigger
@@ -224,6 +250,120 @@ CREATE INDEX IF NOT EXISTS idx_cms_banners_page_placement_status
 
 CREATE INDEX IF NOT EXISTS idx_cms_banners_schedule
     ON public.cms_banners (starts_at, ends_at);
+
+CREATE TABLE IF NOT EXISTS public.cms_banner_rotating_terms (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    banner_id UUID REFERENCES public.cms_banners(id) ON DELETE CASCADE,
+    page_slug VARCHAR(160),
+    placement VARCHAR(80) NOT NULL DEFAULT 'hero',
+    term VARCHAR(180) NOT NULL,
+    locale VARCHAR(12) NOT NULL DEFAULT 'en',
+    status VARCHAR(40) NOT NULL DEFAULT 'published',
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT cms_banner_rotating_terms_status_check
+      CHECK (status IN ('draft', 'published', 'archived')),
+    CONSTRAINT cms_banner_rotating_terms_metadata_object_check
+      CHECK (jsonb_typeof(metadata) = 'object')
+);
+
+CREATE INDEX IF NOT EXISTS idx_cms_banner_rotating_terms_lookup
+    ON public.cms_banner_rotating_terms (page_slug, placement, locale, status, sort_order);
+
+CREATE TABLE IF NOT EXISTS public.cms_metrics (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    page_slug VARCHAR(160) NOT NULL DEFAULT 'home',
+    metric_key VARCHAR(120) NOT NULL,
+    value VARCHAR(60) NOT NULL,
+    label VARCHAR(140) NOT NULL,
+    description TEXT,
+    icon_name VARCHAR(80),
+    status VARCHAR(40) NOT NULL DEFAULT 'published',
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT cms_metrics_unique_key UNIQUE (page_slug, metric_key),
+    CONSTRAINT cms_metrics_status_check
+      CHECK (status IN ('draft', 'published', 'archived')),
+    CONSTRAINT cms_metrics_metadata_object_check
+      CHECK (jsonb_typeof(metadata) = 'object')
+);
+
+CREATE INDEX IF NOT EXISTS idx_cms_metrics_page_status_sort
+    ON public.cms_metrics (page_slug, status, sort_order);
+
+CREATE TABLE IF NOT EXISTS public.cms_content_sections (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    page_slug VARCHAR(160) NOT NULL,
+    section_key VARCHAR(140) NOT NULL,
+    eyebrow VARCHAR(140),
+    title VARCHAR(260),
+    subtitle VARCHAR(260),
+    description TEXT,
+    image_asset_id UUID REFERENCES public.cms_media_assets(id) ON DELETE SET NULL,
+    background_asset_id UUID REFERENCES public.cms_media_assets(id) ON DELETE SET NULL,
+    cta_label VARCHAR(120),
+    cta_href TEXT,
+    secondary_cta_label VARCHAR(120),
+    secondary_cta_href TEXT,
+    status VARCHAR(40) NOT NULL DEFAULT 'published',
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT cms_content_sections_unique_key UNIQUE (page_slug, section_key),
+    CONSTRAINT cms_content_sections_status_check
+      CHECK (status IN ('draft', 'published', 'archived')),
+    CONSTRAINT cms_content_sections_metadata_object_check
+      CHECK (jsonb_typeof(metadata) = 'object')
+);
+
+CREATE INDEX IF NOT EXISTS idx_cms_content_sections_page_status_sort
+    ON public.cms_content_sections (page_slug, status, sort_order);
+
+CREATE TABLE IF NOT EXISTS public.cms_service_cards (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    page_slug VARCHAR(160) NOT NULL DEFAULT 'home',
+    section_key VARCHAR(140) NOT NULL DEFAULT 'what-we-do',
+    slug VARCHAR(160) NOT NULL,
+    title VARCHAR(180) NOT NULL,
+    description TEXT NOT NULL,
+    icon_name VARCHAR(80),
+    image_asset_id UUID REFERENCES public.cms_media_assets(id) ON DELETE SET NULL,
+    href TEXT,
+    status VARCHAR(40) NOT NULL DEFAULT 'published',
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT cms_service_cards_unique_slug UNIQUE (page_slug, section_key, slug),
+    CONSTRAINT cms_service_cards_status_check
+      CHECK (status IN ('draft', 'published', 'archived')),
+    CONSTRAINT cms_service_cards_metadata_object_check
+      CHECK (jsonb_typeof(metadata) = 'object')
+);
+
+CREATE INDEX IF NOT EXISTS idx_cms_service_cards_section_status_sort
+    ON public.cms_service_cards (page_slug, section_key, status, sort_order);
+
+CREATE TABLE IF NOT EXISTS public.cms_service_card_points (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    service_card_id UUID NOT NULL REFERENCES public.cms_service_cards(id) ON DELETE CASCADE,
+    label VARCHAR(180) NOT NULL,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_cms_service_card_points_card_sort
+    ON public.cms_service_card_points (service_card_id, sort_order);
 
 CREATE TABLE IF NOT EXISTS public.cms_products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -439,6 +579,75 @@ CREATE TABLE IF NOT EXISTS public.cms_solution_capabilities (
 CREATE INDEX IF NOT EXISTS idx_cms_solution_capabilities_solution_sort
     ON public.cms_solution_capabilities (solution_id, sort_order);
 
+CREATE TABLE IF NOT EXISTS public.cms_company_statements (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    statement_type VARCHAR(40) NOT NULL,
+    title VARCHAR(180) NOT NULL,
+    description TEXT NOT NULL,
+    icon_name VARCHAR(80),
+    status VARCHAR(40) NOT NULL DEFAULT 'published',
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT cms_company_statements_type_check
+      CHECK (statement_type IN ('vision', 'mission')),
+    CONSTRAINT cms_company_statements_status_check
+      CHECK (status IN ('draft', 'published', 'archived')),
+    CONSTRAINT cms_company_statements_metadata_object_check
+      CHECK (jsonb_typeof(metadata) = 'object')
+);
+
+CREATE INDEX IF NOT EXISTS idx_cms_company_statements_type_status_sort
+    ON public.cms_company_statements (statement_type, status, sort_order);
+
+CREATE TABLE IF NOT EXISTS public.cms_company_values (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    slug VARCHAR(160) UNIQUE NOT NULL,
+    title VARCHAR(160) NOT NULL,
+    description TEXT NOT NULL,
+    icon_name VARCHAR(80),
+    status VARCHAR(40) NOT NULL DEFAULT 'published',
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT cms_company_values_status_check
+      CHECK (status IN ('draft', 'published', 'archived')),
+    CONSTRAINT cms_company_values_metadata_object_check
+      CHECK (jsonb_typeof(metadata) = 'object')
+);
+
+CREATE INDEX IF NOT EXISTS idx_cms_company_values_status_sort
+    ON public.cms_company_values (status, sort_order);
+
+CREATE TABLE IF NOT EXISTS public.cms_company_leaders (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    slug VARCHAR(160) UNIQUE NOT NULL,
+    name VARCHAR(180) NOT NULL,
+    role VARCHAR(180) NOT NULL,
+    bio TEXT,
+    image_asset_id UUID REFERENCES public.cms_media_assets(id) ON DELETE SET NULL,
+    image_url TEXT,
+    linkedin_url TEXT,
+    email VARCHAR(160),
+    status VARCHAR(40) NOT NULL DEFAULT 'published',
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT cms_company_leaders_status_check
+      CHECK (status IN ('draft', 'published', 'archived')),
+    CONSTRAINT cms_company_leaders_metadata_object_check
+      CHECK (jsonb_typeof(metadata) = 'object')
+);
+
+CREATE INDEX IF NOT EXISTS idx_cms_company_leaders_status_sort
+    ON public.cms_company_leaders (status, sort_order);
+
 CREATE TABLE IF NOT EXISTS public.cms_events (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     slug VARCHAR(180) UNIQUE NOT NULL,
@@ -534,6 +743,31 @@ CREATE TRIGGER trg_cms_banners_updated_at
 BEFORE UPDATE ON public.cms_banners
 FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
+DROP TRIGGER IF EXISTS trg_cms_banner_rotating_terms_updated_at ON public.cms_banner_rotating_terms;
+CREATE TRIGGER trg_cms_banner_rotating_terms_updated_at
+BEFORE UPDATE ON public.cms_banner_rotating_terms
+FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+DROP TRIGGER IF EXISTS trg_cms_metrics_updated_at ON public.cms_metrics;
+CREATE TRIGGER trg_cms_metrics_updated_at
+BEFORE UPDATE ON public.cms_metrics
+FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+DROP TRIGGER IF EXISTS trg_cms_content_sections_updated_at ON public.cms_content_sections;
+CREATE TRIGGER trg_cms_content_sections_updated_at
+BEFORE UPDATE ON public.cms_content_sections
+FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+DROP TRIGGER IF EXISTS trg_cms_service_cards_updated_at ON public.cms_service_cards;
+CREATE TRIGGER trg_cms_service_cards_updated_at
+BEFORE UPDATE ON public.cms_service_cards
+FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+DROP TRIGGER IF EXISTS trg_cms_service_card_points_updated_at ON public.cms_service_card_points;
+CREATE TRIGGER trg_cms_service_card_points_updated_at
+BEFORE UPDATE ON public.cms_service_card_points
+FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
 DROP TRIGGER IF EXISTS trg_cms_products_updated_at ON public.cms_products;
 CREATE TRIGGER trg_cms_products_updated_at
 BEFORE UPDATE ON public.cms_products
@@ -584,6 +818,21 @@ CREATE TRIGGER trg_cms_solution_capabilities_updated_at
 BEFORE UPDATE ON public.cms_solution_capabilities
 FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
+DROP TRIGGER IF EXISTS trg_cms_company_statements_updated_at ON public.cms_company_statements;
+CREATE TRIGGER trg_cms_company_statements_updated_at
+BEFORE UPDATE ON public.cms_company_statements
+FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+DROP TRIGGER IF EXISTS trg_cms_company_values_updated_at ON public.cms_company_values;
+CREATE TRIGGER trg_cms_company_values_updated_at
+BEFORE UPDATE ON public.cms_company_values
+FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+DROP TRIGGER IF EXISTS trg_cms_company_leaders_updated_at ON public.cms_company_leaders;
+CREATE TRIGGER trg_cms_company_leaders_updated_at
+BEFORE UPDATE ON public.cms_company_leaders
+FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
 DROP TRIGGER IF EXISTS trg_cms_events_updated_at ON public.cms_events;
 CREATE TRIGGER trg_cms_events_updated_at
 BEFORE UPDATE ON public.cms_events
@@ -620,6 +869,7 @@ SELECT
     email,
     phone,
     interest,
+    lead_type,
     source,
     left(message_text, 220) AS message_preview
 FROM public.contact_submissions
@@ -693,6 +943,129 @@ WHERE b.status = 'published'
   AND (b.ends_at IS NULL OR b.ends_at >= NOW())
 ORDER BY b.page_slug, b.placement, b.sort_order;
 
+CREATE OR REPLACE VIEW public.v_cms_home_metrics AS
+SELECT
+    id,
+    page_slug,
+    metric_key,
+    value,
+    label,
+    description,
+    icon_name,
+    sort_order
+FROM public.cms_metrics
+WHERE status = 'published'
+ORDER BY page_slug, sort_order, label;
+
+CREATE OR REPLACE VIEW public.v_cms_home_service_cards AS
+SELECT
+    c.id,
+    c.page_slug,
+    c.section_key,
+    c.slug,
+    c.title,
+    c.description,
+    c.icon_name,
+    m.file_url AS image_url,
+    c.href,
+    c.sort_order,
+    COALESCE(
+      jsonb_agg(
+        jsonb_build_object(
+          'label', p.label,
+          'sortOrder', p.sort_order
+        )
+        ORDER BY p.sort_order
+      ) FILTER (WHERE p.id IS NOT NULL),
+      '[]'::jsonb
+    ) AS points
+FROM public.cms_service_cards c
+LEFT JOIN public.cms_media_assets m ON m.id = c.image_asset_id
+LEFT JOIN public.cms_service_card_points p ON p.service_card_id = c.id
+WHERE c.status = 'published'
+GROUP BY c.id, m.file_url
+ORDER BY c.page_slug, c.section_key, c.sort_order;
+
+CREATE OR REPLACE VIEW public.v_cms_published_solutions AS
+SELECT
+    s.id,
+    s.slug,
+    s.tab_id,
+    s.label,
+    s.title,
+    s.description,
+    s.icon_name,
+    m.file_url AS image_url,
+    s.sort_order,
+    COALESCE(
+      jsonb_agg(
+        jsonb_build_object(
+          'title', cap.title,
+          'description', cap.description,
+          'iconName', cap.icon_name,
+          'sortOrder', cap.sort_order
+        )
+        ORDER BY cap.sort_order
+      ) FILTER (WHERE cap.id IS NOT NULL),
+      '[]'::jsonb
+    ) AS capabilities
+FROM public.cms_solutions s
+LEFT JOIN public.cms_media_assets m ON m.id = s.image_asset_id
+LEFT JOIN public.cms_solution_capabilities cap ON cap.solution_id = s.id
+WHERE s.status = 'published'
+GROUP BY s.id, m.file_url
+ORDER BY s.sort_order, s.label;
+
+CREATE OR REPLACE VIEW public.v_cms_company_profile AS
+SELECT
+    'statements' AS content_type,
+    jsonb_agg(
+      jsonb_build_object(
+        'type', statement_type,
+        'title', title,
+        'description', description,
+        'iconName', icon_name,
+        'sortOrder', sort_order
+      )
+      ORDER BY statement_type, sort_order
+    ) AS items
+FROM public.cms_company_statements
+WHERE status = 'published'
+UNION ALL
+SELECT
+    'values' AS content_type,
+    jsonb_agg(
+      jsonb_build_object(
+        'slug', slug,
+        'title', title,
+        'description', description,
+        'iconName', icon_name,
+        'sortOrder', sort_order
+      )
+      ORDER BY sort_order
+    ) AS items
+FROM public.cms_company_values
+WHERE status = 'published'
+UNION ALL
+SELECT
+    'leaders' AS content_type,
+    jsonb_agg(
+      jsonb_build_object(
+        'slug', l.slug,
+        'name', l.name,
+        'role', l.role,
+        'bio', l.bio,
+        'imageUrl', COALESCE(m.file_url, l.image_url),
+        'linkedinUrl', l.linkedin_url,
+        'email', l.email,
+        'sortOrder', l.sort_order
+      )
+      ORDER BY l.sort_order
+    ) AS items
+FROM public.cms_company_leaders l
+LEFT JOIN public.cms_media_assets m ON m.id = l.image_asset_id
+WHERE l.status = 'published';
+
 -- ------------------------------------------------------------
 -- 6) Smoke-test query
 -- ------------------------------------------------------------
@@ -704,4 +1077,6 @@ SELECT
     (SELECT count(*) FROM public.cms_products) AS product_rows,
     (SELECT count(*) FROM public.cms_articles) AS article_rows,
     (SELECT count(*) FROM public.cms_clients) AS client_rows,
-    (SELECT count(*) FROM public.cms_banners) AS banner_rows;
+    (SELECT count(*) FROM public.cms_banners) AS banner_rows,
+    (SELECT count(*) FROM public.cms_metrics) AS metric_rows,
+    (SELECT count(*) FROM public.cms_company_leaders) AS leader_rows;

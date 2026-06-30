@@ -6,18 +6,33 @@ import { IndustriesSection } from "@/components/sections/industries-section";
 import { InsightsSection } from "@/components/sections/insight-section";
 import { MetricsSection } from "@/components/sections/metrics-section";
 import { ProductsSection } from "@/components/sections/products-section";
+import { Reveal } from "@/components/shared/reveal";
 
 export default function HomePage() {
   return (
     <main>
       <HeroSection />
-      <MetricsSection />
-      <IndustrySummarySection />
-      <ProductsSection />
-      <EnterpriseSoftwareSection />
-      <InsightsSection />
-      <IndustriesSection />
-      <ContactSection />
+      <Reveal>
+        <MetricsSection />
+      </Reveal>
+      <Reveal>
+        <IndustrySummarySection />
+      </Reveal>
+      <Reveal>
+        <ProductsSection />
+      </Reveal>
+      <Reveal>
+        <EnterpriseSoftwareSection />
+      </Reveal>
+      <Reveal>
+        <InsightsSection />
+      </Reveal>
+      <Reveal>
+        <IndustriesSection />
+      </Reveal>
+      <Reveal>
+        <ContactSection />
+      </Reveal>
     </main>
   );
 }

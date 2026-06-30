@@ -11,17 +11,22 @@ import {
 } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
+import { Reveal } from "@/components/shared/reveal";
+import { industryCards, type IndustryCard } from "@/config/industries";
 
-const industryChips = [
-  { label: "Government & BUMN", icon: Landmark },
-  { label: "Manufacturing", icon: Factory },
-  { label: "Education", icon: GraduationCap },
-  { label: "Healthcare", icon: HeartPulse },
-  { label: "Telecommunication", icon: TowerControl },
-  { label: "Enterprise", icon: Building2 },
-  { label: "Banking & Financial Services", icon: Banknote },
-  { label: "Agriculture", icon: Sprout },
-] as const;
+const industryIcons = {
+  government: Landmark,
+  manufacturing: Factory,
+  education: GraduationCap,
+  healthcare: HeartPulse,
+  telecommunication: TowerControl,
+  enterprise: Building2,
+  banking: Banknote,
+  agriculture: Sprout,
+} satisfies Record<
+  IndustryCard["icon"],
+  React.ComponentType<{ size?: number; className?: string }>
+>;
 
 export function IndustrySummarySection() {
   return (
@@ -55,22 +60,29 @@ export function IndustrySummarySection() {
           </div>
 
           <ul className="flex flex-wrap items-center justify-center gap-4 lg:justify-center">
-            {industryChips.map((industry) => {
-              const Icon = industry.icon;
+            {industryCards.map((industry, index) => {
+              const Icon = industryIcons[industry.icon];
 
               return (
-                <li key={industry.label}>
-                  <a
-                    href="/industries"
-                    className="inline-flex min-h-12 items-center gap-3 bg-cyan-50 px-6 text-sm font-medium text-slate-600 transition hover:bg-blue-600 hover:text-white"
+                <li key={industry.slug}>
+                  <Reveal
+                    delay={index * 55}
+                    duration={550}
+                    direction="up"
+                    className="h-full"
                   >
-                    <Icon
-                      aria-hidden="true"
-                      size={16}
-                      className="text-blue-600 transition"
-                    />
-                    {industry.label}
-                  </a>
+                    <a
+                      href={`/industries#${industry.slug}`}
+                      className="group inline-flex min-h-12 items-center gap-3 bg-cyan-50 px-6 text-sm font-medium text-slate-600 transition hover:bg-blue-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                    >
+                      <Icon
+                        aria-hidden="true"
+                        size={16}
+                        className="text-blue-600 transition group-hover:text-white"
+                      />
+                      {industry.title}
+                    </a>
+                  </Reveal>
                 </li>
               );
             })}

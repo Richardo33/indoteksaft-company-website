@@ -24,9 +24,9 @@ export default function CareersPage() {
             Future Opportunities
           </h2>
           <p className="mt-4 text-sm leading-7 text-slate-500">
-            Saat ini halaman karier sedang disiapkan. Untuk sementara, kandidat
-            atau partner talent dapat menghubungi tim kami melalui email resmi
-            atau halaman contact sales.
+            Our careers page is currently being prepared. For now, candidates
+            or talent partners can contact our team through the official email
+            or contact sales page.
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">

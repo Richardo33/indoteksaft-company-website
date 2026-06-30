@@ -48,7 +48,7 @@ export function HeroSection() {
     <section
       id="top"
       aria-labelledby="hero-title"
-      className="relative isolate min-h-[760px] overflow-hidden pt-18"
+      className="relative isolate min-h-190 overflow-hidden pt-18"
     >
       <Image
         src="/images/hero-bg.png"
@@ -62,13 +62,13 @@ export function HeroSection() {
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(5,11,24,.24)_0%,rgba(5,11,24,.06)_45%,rgba(5,11,24,.28)_100%)]" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_38%,rgba(0,102,255,.12),transparent_34%)]" />
       <div className="tech-grid absolute inset-0 -z-10 opacity-40" />
-      <div className="absolute inset-0 -z-10 opacity-80 [mask-image:linear-gradient(to_bottom,black_10%,black_75%,transparent_100%)]">
+      <div className="absolute inset-0 -z-10 opacity-80 mask-[linear-gradient(to_bottom,black_10%,black_75%,transparent_100%)]">
         <HeroParticles />
       </div>
 
-      <Container className="grid min-h-[650px] items-center py-12 sm:py-14 lg:-translate-y-5">
+      <Container className="grid min-h-162.5 items-center py-12 sm:py-14 lg:-translate-y-5">
         <div className="min-w-0" data-i18n-skip>
-          <div className="mb-7 inline-flex max-w-full items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[0.06] px-3 py-2 sm:px-4">
+          <div className="mb-7 inline-flex max-w-full items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/6 px-3 py-2 sm:px-4">
             <ShieldCheck
               aria-hidden="true"
               className="text-cyan-300"
@@ -88,7 +88,7 @@ export function HeroSection() {
               <RotatingTypeText
                 key={locale}
                 words={copy.rotatingWords}
-                className="bg-gradient-to-r from-blue-500 via-cyan-300 to-blue-400 bg-clip-text text-transparent"
+                className="bg-linear-to-r from-blue-500 via-cyan-300 to-blue-400 bg-clip-text text-transparent"
               />
             </span>
             <span className="block">{copy.titleSuffix}</span>
@@ -100,15 +100,15 @@ export function HeroSection() {
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <a
-              href="#contact"
+              href="/contact"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 text-sm font-semibold text-white shadow-xl shadow-blue-600/25 transition hover:-translate-y-0.5 hover:bg-blue-500"
             >
               {copy.primaryCta}
               <ArrowRight aria-hidden="true" size={17} />
             </a>
             <a
-              href="#solutions"
-              className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] px-6 text-sm font-semibold text-white transition hover:border-cyan-300/40 hover:bg-cyan-300/[0.06]"
+              href="/solutions"
+              className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/15 bg-white/4 px-6 text-sm font-semibold text-white transition hover:border-cyan-300/40 hover:bg-cyan-300/6"
             >
               {copy.secondaryCta}
             </a>

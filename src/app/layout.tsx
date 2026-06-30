@@ -89,12 +89,16 @@ export default function RootLayout({
   return (
     <html
       lang="id"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="min-h-full bg-[#050b18] text-slate-100">
+      <body
+        suppressHydrationWarning
+        className="min-h-full bg-[#050b18] text-slate-100"
+      >
         <a
           href="#main-content"
-          className="sr-only z-[100] rounded bg-white px-4 py-2 text-slate-950 focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+          className="sr-only z-100 rounded bg-white px-4 py-2 text-slate-950 focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
         >
           Lewati ke konten utama
         </a>

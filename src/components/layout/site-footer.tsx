@@ -7,13 +7,13 @@ export function SiteFooter() {
 
   return (
     <footer className="bg-white text-slate-700">
-      <Container className="pb-12 pt-0 sm:pb-14 lg:pb-16">
-        <div className="pt-12">
-          <div className="grid gap-12 lg:grid-cols-[1.05fr_1.95fr] lg:gap-20">
+      <Container className="pb-7 pt-0 sm:pb-8 lg:pb-10">
+        <div className="pt-8">
+          <div className="grid gap-8 lg:grid-cols-[1.05fr_1.95fr] lg:gap-14">
             <div>
               <BrandMark tone="dark" />
 
-              <div className="mt-7 space-y-4 text-sm leading-7">
+              <div className="mt-5 space-y-3 text-sm leading-6">
                 <p className="font-bold text-slate-950">{company.legalName}</p>
                 <address className="not-italic text-slate-500">
                   {company.footerAddress.map((line) => (
@@ -22,7 +22,7 @@ export function SiteFooter() {
                     </span>
                   ))}
                 </address>
-                <p className="pt-4 text-slate-500">
+                <p className="pt-2 text-slate-500">
                   Empowering Digital Transformation.
                   <br />
                   Make it Happen, Make it Matter.
@@ -32,7 +32,7 @@ export function SiteFooter() {
 
             <nav
               aria-label="Footer navigation"
-              className="grid gap-10 sm:grid-cols-3 lg:gap-14"
+              className="grid gap-8 sm:grid-cols-3 lg:gap-12"
             >
               {company.footerLinks.map((group) => (
                 <div key={group.title}>
@@ -41,7 +41,7 @@ export function SiteFooter() {
                       ? group.title
                       : group.title.toUpperCase()}
                   </h2>
-                  <ul className="mt-5 space-y-3.5">
+                  <ul className="mt-4 space-y-2.5">
                     {group.links.map((link) => (
                       <li key={`${group.title}-${link.label}`}>
                         <a
@@ -58,9 +58,10 @@ export function SiteFooter() {
             </nav>
           </div>
 
-          <div className="mt-12 grid border border-slate-200 text-sm text-slate-400 md:grid-cols-[1fr_auto_auto]">
-            <p className="flex min-h-14 items-center px-7">
-              &copy; 2018-{currentYear} {company.legalName}. All rights reserved.
+          <div className="mt-9 grid border border-slate-200 text-sm text-slate-400 md:grid-cols-[1fr_auto_auto]">
+            <p className="flex min-h-12 items-center px-6">
+              &copy; 2018-{currentYear} {company.legalName}. All rights
+              reserved.
             </p>
 
             {company.socialLinks.map((social) => (
@@ -69,7 +70,7 @@ export function SiteFooter() {
                 href={social.href}
                 target="_blank"
                 rel="noreferrer"
-                className="flex min-h-14 items-center gap-3 border-t border-slate-200 px-7 transition hover:bg-slate-50 hover:text-blue-600 md:border-l md:border-t-0"
+                className="flex min-h-12 items-center gap-3 border-t border-slate-200 px-6 transition hover:bg-slate-50 hover:text-blue-600 md:border-l md:border-t-0"
               >
                 {social.label === "Linkedin" ? (
                   <LinkedinIcon />

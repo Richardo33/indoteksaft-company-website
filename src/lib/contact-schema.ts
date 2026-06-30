@@ -47,6 +47,17 @@ export const contactSchema = z.object({
     "Managed Services",
     "Other",
   ]),
+  leadType: z
+    .enum([
+      "consultation",
+      "company_profile_download",
+      "contact_sales",
+      "assessment_request",
+      "demo_request",
+      "brochure_request",
+      "general_inquiry",
+    ])
+    .default("consultation"),
   message: z
     .string()
     .transform(cleanMultilineText)

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ArrowRight, Check, Code2, RadioTower, ServerCog } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
+import { Reveal } from "@/components/shared/reveal";
 
 const technologySolutions = [
   {
@@ -10,6 +11,7 @@ const technologySolutions = [
       "Comprehensive infrastructure solutions designed to optimize performance, strengthen security, and support the evolving needs of modern enterprises.",
     image: "/images/industry-defense.png",
     icon: ServerCog,
+    href: "/solutions#infrastructure",
     features: [
       "Secure & Reliable Infrastructure",
       "High Availability & Scalability",
@@ -22,6 +24,7 @@ const technologySolutions = [
       "Comprehensive technology delivery services that transform business requirements into secure, scalable, and future-ready digital solutions.",
     image: "/images/industry-enterprise.png",
     icon: Code2,
+    href: "/solutions#delivery",
     features: [
       "Custom Development",
       "Scalable Architecture",
@@ -34,6 +37,7 @@ const technologySolutions = [
       "Comprehensive telecommunications services to support network development, infrastructure maintenance, and reliable connectivity.",
     image: "/images/industry-telecom.png",
     icon: RadioTower,
+    href: "/solutions#telecommunication",
     features: [
       "BTS Installation & Upgrade",
       "Site Maintenance",
@@ -68,15 +72,20 @@ export function ProductsSection() {
         </div>
 
         <div className="mt-14 grid gap-8 lg:grid-cols-3">
-          {technologySolutions.map((solution) => {
+          {technologySolutions.map((solution, index) => {
             const Icon = solution.icon;
-            const featureSlots = Array.from({ length: 3 }, (_, index) =>
-              solution.features[index] ?? null
+            const featureSlots = Array.from(
+              { length: 3 },
+              (_, index) => solution.features[index] ?? null,
             );
 
             return (
-              <article key={solution.title} className="group flex h-full flex-col">
-                <div className="relative aspect-[16/9] overflow-hidden bg-cyan-50">
+              <Reveal
+                key={solution.title}
+                delay={index * 100}
+                className="group flex h-full flex-col"
+              >
+                <div className="relative aspect-video overflow-hidden bg-cyan-50">
                   <Image
                     src={solution.image}
                     alt=""
@@ -93,11 +102,11 @@ export function ProductsSection() {
                 <h3 className="mt-6 line-clamp-1 min-h-7 text-xl font-bold leading-7 tracking-[-0.03em] text-slate-950">
                   {solution.title}
                 </h3>
-                <p className="mt-4 line-clamp-3 min-h-[84px] text-sm leading-7 text-slate-600">
+                <p className="mt-4 line-clamp-3 min-h-21 text-sm leading-7 text-slate-600">
                   {solution.description}
                 </p>
 
-                <ul className="mt-5 min-h-[84px] space-y-3">
+                <ul className="mt-5 min-h-21 space-y-3">
                   {featureSlots.map((feature, index) => (
                     <li
                       key={feature ?? `empty-feature-${index}`}
@@ -121,13 +130,13 @@ export function ProductsSection() {
                 </ul>
 
                 <a
-                  href="/solutions"
+                  href={solution.href}
                   className="mt-8 inline-flex min-h-11 w-fit items-center justify-center gap-2 border border-blue-600 px-6 text-sm font-semibold text-blue-600 transition hover:bg-blue-600 hover:text-white"
                 >
                   Detail Solutions
                   <ArrowRight aria-hidden="true" size={16} />
                 </a>
-              </article>
+              </Reveal>
             );
           })}
         </div>

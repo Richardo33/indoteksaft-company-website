@@ -56,16 +56,16 @@ export default function IndustriesPage() {
         <Container className="relative z-10 min-h-[350px] py-14 lg:py-0">
           <div className="grid min-h-[350px] items-center gap-10 lg:grid-cols-[2fr_1fr]">
             <div className="max-w-3xl">
-            <span className="text-xs font-bold uppercase tracking-[0.18em] text-white/75">
-              Trusted across industries
-            </span>
-            <h1 className="mt-6 text-3xl font-bold tracking-[-0.04em] text-cyan-200 sm:text-4xl">
-              Technology Solutions for Every Industry
-            </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-white/85">
-              Building a strong digital foundation to support innovation,
-              efficiency, and business growth across multiple sectors.
-            </p>
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-white/75">
+                Trusted across industries
+              </span>
+              <h1 className="mt-6 text-3xl font-bold tracking-[-0.04em] text-cyan-200 sm:text-4xl">
+                Technology Solutions for Every Industry
+              </h1>
+              <p className="mt-6 max-w-2xl text-base leading-8 text-white/85">
+                Building a strong digital foundation to support innovation,
+                efficiency, and business growth across multiple sectors.
+              </p>
             </div>
             <div aria-hidden="true" className="hidden lg:block" />
           </div>
@@ -93,8 +93,9 @@ export default function IndustriesPage() {
               return (
                 <Link
                   key={industry.slug}
-                  href="/#contact"
-                  className="group min-h-[190px] border-b border-slate-200 p-7 transition hover:bg-slate-50 md:border-r lg:[&:nth-child(3n)]:border-r-0"
+                  id={industry.slug}
+                  href="/contact"
+                  className="group scroll-mt-28 min-h-47.5 border-b border-slate-200 p-7 transition hover:bg-slate-50 md:border-r lg:nth-[3n]:border-r-0"
                 >
                   <div className="flex items-center justify-between">
                     <span className="grid size-11 place-items-center bg-cyan-50 text-blue-600">

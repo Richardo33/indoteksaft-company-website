@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { Container } from "@/components/shared/container";
+import { Reveal } from "@/components/shared/reveal";
 
 type SimplePageShellProps = {
   eyebrow: string;
@@ -20,21 +21,23 @@ export function SimplePageShell({
     <main className="bg-white pt-18 text-slate-950">
       <section className="border-b border-slate-200 bg-[#0d2f86] text-white">
         <Container className="py-16 sm:py-20">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-200">
-            {eyebrow}
-          </span>
-          <h1 className="mt-5 max-w-3xl text-3xl font-bold tracking-[-0.04em] text-cyan-100 sm:text-4xl">
-            {title}
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-8 text-white/80">
-            {description}
-          </p>
+          <Reveal>
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-200">
+              {eyebrow}
+            </span>
+            <h1 className="mt-5 max-w-3xl text-3xl font-bold tracking-[-0.04em] text-cyan-100 sm:text-4xl">
+              {title}
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-8 text-white/80">
+              {description}
+            </p>
+          </Reveal>
         </Container>
       </section>
 
       <section className="py-14 sm:py-16 lg:py-20">
         <Container>
-          <div className="border border-slate-200 bg-white p-7 sm:p-10">
+          <Reveal className="border border-slate-200 bg-white p-7 sm:p-10">
             {children ?? (
               <div className="max-w-3xl">
                 <h2 className="text-xl font-bold text-slate-950">
@@ -52,7 +55,7 @@ export function SimplePageShell({
                 </Link>
               </div>
             )}
-          </div>
+          </Reveal>
         </Container>
       </section>
     </main>

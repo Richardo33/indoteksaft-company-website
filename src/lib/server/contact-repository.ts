@@ -32,12 +32,13 @@ export async function saveContactSubmission({
         email,
         phone,
         interest,
+        lead_type,
         message_text,
         message_html,
         message_lines,
         source
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::jsonb, $11)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11::jsonb, $12)
     `,
     [
       requestId,
@@ -47,15 +48,19 @@ export async function saveContactSubmission({
       payload.email,
       payload.phone ?? null,
       payload.interest,
+      payload.leadType,
       formattedRequirement.text,
       formattedRequirement.html,
       JSON.stringify(formattedRequirement.lines),
-      "website_contact_form",
+      payload.leadType === "company_profile_download"
+        ? "company_profile_download_form"
+        : "website_contact_form",
     ],
   );
 
   logger.info("contact.saved_to_database", {
     requestId,
     interest: payload.interest,
+    leadType: payload.leadType,
   });
 }

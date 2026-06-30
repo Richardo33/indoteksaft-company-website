@@ -6,6 +6,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Container } from "@/components/shared/container";
+import { Reveal } from "@/components/shared/reveal";
 import { articlePages } from "@/config/articles";
 
 export function InsightsSection() {
@@ -61,9 +62,10 @@ export function InsightsSection() {
           id="articles"
           className="mt-14 grid gap-7 md:grid-cols-2 lg:grid-cols-3"
         >
-          {articles.map((article) => (
-            <article
+          {articles.map((article, index) => (
+            <Reveal
               key={article.slug}
+              delay={index * 90}
               className="group overflow-hidden bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md"
             >
               <Link
@@ -108,7 +110,7 @@ export function InsightsSection() {
                   </Link>
                 </div>
               </div>
-            </article>
+            </Reveal>
           ))}
         </div>
 

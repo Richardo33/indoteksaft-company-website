@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Container } from "@/components/shared/container";
@@ -42,13 +43,13 @@ export function EnterpriseSoftwareSection() {
             </p>
           </div>
 
-          <a
-            href="#products"
+          <Link
+            href="/products"
             className="inline-flex min-h-11 w-fit items-center justify-center gap-2 border border-white/70 px-7 text-sm font-semibold text-white transition hover:bg-white hover:text-[#0d2f86]"
           >
             All Products
             <ArrowRight aria-hidden="true" size={16} />
-          </a>
+          </Link>
         </div>
 
         <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -109,7 +110,9 @@ export function LaptopMockup({
       </div>
 
       {/* Cover bawah agar circle tidak turun sampai area teks */}
-      <div className={`absolute inset-x-0 top-[72%] z-10 h-14 ${surfaceClassName}`} />
+      <div
+        className={`absolute inset-x-0 top-[72%] z-10 h-14 ${surfaceClassName}`}
+      />
 
       {/* Laptop */}
       <div className="relative z-20 mt-10 w-[76%]">

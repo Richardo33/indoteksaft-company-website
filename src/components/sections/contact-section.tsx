@@ -1,14 +1,14 @@
 import {
   ClipboardCheck,
-  Download,
-  FileText,
   Mail,
   MapPin,
 } from "lucide-react";
 
 import { company } from "@/config/company";
 import { Container } from "@/components/shared/container";
+import { CompanyProfileDownloadDialog } from "@/components/sections/company-profile-download-dialog";
 import { ContactFormLoader } from "@/components/sections/contact-form-loader";
+import { Reveal } from "@/components/shared/reveal";
 
 export function ContactSection() {
   return (
@@ -19,7 +19,7 @@ export function ContactSection() {
     >
       <Container>
         <div className="grid gap-14 border-b border-slate-200 pb-12 lg:grid-cols-[0.78fr_1.22fr]">
-          <div>
+          <Reveal>
             <span className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600">
               Get started
             </span>
@@ -37,12 +37,7 @@ export function ContactSection() {
             <div className="mt-9 space-y-5">
               <ContactDetail icon={Mail} label="Email" value={company.email} />
               <ContactDetail icon={MapPin} label="Location" value={company.address} />
-              <ActionDetail
-                icon={FileText}
-                label="Download Company Profile"
-                value="Full capabilities overview (PDF)"
-                href="#"
-              />
+              <CompanyProfileDownloadDialog />
               <ActionDetail
                 icon={ClipboardCheck}
                 label="Request Assessment"
@@ -50,9 +45,11 @@ export function ContactSection() {
                 href="#contact"
               />
             </div>
-          </div>
+          </Reveal>
 
-          <ContactFormLoader />
+          <Reveal delay={120}>
+            <ContactFormLoader />
+          </Reveal>
         </div>
       </Container>
     </section>
@@ -93,9 +90,6 @@ function ActionDetail({ icon: Icon, label, value, href }: ActionDetailProps) {
         <span className="block text-sm font-bold text-blue-600">{label}</span>
         <span className="mt-1 block text-sm text-slate-500">{value}</span>
       </div>
-      {label.startsWith("Download") && (
-        <Download aria-hidden="true" className="sr-only" size={16} />
-      )}
     </a>
   );
 }

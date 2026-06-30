@@ -1,5 +1,7 @@
 # Sanity CMS Setup
 
+> Status saat ini: integrasi Sanity Studio sedang diparkir dulu untuk menjaga deployment audit-clean di Next.js 16. Route `/studio` tetap disiapkan sebagai placeholder, tetapi package `sanity` / `next-sanity` belum aktif di dependency production. Dokumen ini tetap disimpan sebagai rencana fase CMS berikutnya.
+
 CMS yang dipakai adalah Sanity Studio embedded di Next.js route:
 
 ```text
