@@ -11,7 +11,10 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { solutionTabs, type SolutionTabId } from "@/config/solutions";
+import { useLanguage } from "@/components/i18n/language-provider";
+import { pickLocalized } from "@/lib/i18n/localized-content";
+import type { SolutionTabId } from "@/config/solutions";
+import type { CmsSolutionTab } from "@/sanity/solutions";
 
 const tabIcons = {
   infrastructure: ServerCog,
@@ -21,16 +24,23 @@ const tabIcons = {
 
 const capabilityIcons = [CloudCog, ServerCog, Database, MonitorCog] as const;
 
-export function SolutionsTabs() {
+type SolutionsTabsProps = {
+  solutions: CmsSolutionTab[];
+};
+
+export function SolutionsTabs({ solutions }: SolutionsTabsProps) {
+  const { locale } = useLanguage();
   const [activeId, setActiveId] = useState<SolutionTabId>("infrastructure");
   const activeSolution =
-    solutionTabs.find((solution) => solution.id === activeId) ?? solutionTabs[0];
+    solutions.find((solution) => solution.id === activeId) ?? solutions[0];
   const HeroIcon = tabIcons[activeSolution.id];
+  const activeTitle = pickLocalized(activeSolution.title, locale);
+  const activeDescription = pickLocalized(activeSolution.description, locale);
 
   useEffect(() => {
     const syncTabFromHash = () => {
       const hash = window.location.hash.replace("#", "");
-      const selectedTab = solutionTabs.find((solution) => solution.id === hash);
+      const selectedTab = solutions.find((solution) => solution.id === hash);
 
       if (selectedTab) {
         setActiveId(selectedTab.id);
@@ -41,7 +51,7 @@ export function SolutionsTabs() {
     window.addEventListener("hashchange", syncTabFromHash);
 
     return () => window.removeEventListener("hashchange", syncTabFromHash);
-  }, []);
+  }, [solutions]);
 
   const handleTabChange = (id: SolutionTabId) => {
     setActiveId(id);
@@ -55,9 +65,10 @@ export function SolutionsTabs() {
         aria-label="Solution categories"
         className="grid border border-slate-200 bg-white md:grid-cols-[1fr_1fr_1fr_2.6fr]"
       >
-        {solutionTabs.map((solution) => {
+        {solutions.map((solution) => {
           const Icon = tabIcons[solution.id];
           const selected = solution.id === activeSolution.id;
+          const label = pickLocalized(solution.label, locale);
 
           return (
             <button
@@ -74,7 +85,7 @@ export function SolutionsTabs() {
               onClick={() => handleTabChange(solution.id)}
             >
               <Icon aria-hidden="true" size={20} />
-              {solution.label}
+              {label}
             </button>
           );
         })}
@@ -88,10 +99,10 @@ export function SolutionsTabs() {
               <HeroIcon aria-hidden="true" size={24} />
             </div>
             <h2 className="mt-8 text-3xl font-bold tracking-[-0.04em] text-slate-950">
-              {activeSolution.title}
+              {activeTitle}
             </h2>
             <p className="mt-4 max-w-md text-base leading-7 text-slate-600">
-              {activeSolution.description}
+              {activeDescription}
             </p>
           </div>
 
@@ -119,18 +130,20 @@ export function SolutionsTabs() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3">
             {activeSolution.capabilities.map((capability, index) => {
               const Icon = capabilityIcons[index % capabilityIcons.length];
+              const title = pickLocalized(capability.title, locale);
+              const description = pickLocalized(capability.description, locale);
 
               return (
                 <div
-                  key={capability.title}
+                  key={title}
                   className="min-h-[190px] border-b border-slate-200 p-8 md:border-r lg:[&:nth-child(3n)]:border-r-0"
                 >
                   <Icon aria-hidden="true" className="text-blue-600" size={22} />
                   <h4 className="mt-6 text-base font-bold text-slate-950">
-                    {capability.title}
+                    {title}
                   </h4>
                   <p className="mt-4 text-sm leading-7 text-slate-500">
-                    {capability.description}
+                    {description}
                   </p>
                 </div>
               );

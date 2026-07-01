@@ -9,12 +9,16 @@ import {
   Sprout,
   TowerControl,
 } from "lucide-react";
+import type { ComponentType } from "react";
 
 import { Container } from "@/components/shared/container";
 import { Reveal } from "@/components/shared/reveal";
-import { industryCards, type IndustryCard } from "@/config/industries";
+import { getHomeIndustries } from "@/sanity/home";
 
-const industryIcons = {
+const industryIcons: Record<
+  string,
+  ComponentType<{ size?: number; className?: string }>
+> = {
   government: Landmark,
   manufacturing: Factory,
   education: GraduationCap,
@@ -23,12 +27,19 @@ const industryIcons = {
   enterprise: Building2,
   banking: Banknote,
   agriculture: Sprout,
-} satisfies Record<
-  IndustryCard["icon"],
-  React.ComponentType<{ size?: number; className?: string }>
->;
+  "Government & BUMN": Landmark,
+  Manufacturing: Factory,
+  Education: GraduationCap,
+  Healthcare: HeartPulse,
+  Telecommunication: TowerControl,
+  Enterprise: Building2,
+  "Banking & Financial Services": Banknote,
+  Agriculture: Sprout,
+};
 
-export function IndustrySummarySection() {
+export async function IndustrySummarySection() {
+  const industries = await getHomeIndustries();
+
   return (
     <section
       aria-labelledby="industry-summary-title"
@@ -60,8 +71,11 @@ export function IndustrySummarySection() {
           </div>
 
           <ul className="flex flex-wrap items-center justify-center gap-4 lg:justify-center">
-            {industryCards.map((industry, index) => {
-              const Icon = industryIcons[industry.icon];
+            {industries.map((industry, index) => {
+              const Icon =
+                industryIcons[industry.icon] ??
+                industryIcons[industry.title] ??
+                Building2;
 
               return (
                 <li key={industry.slug}>

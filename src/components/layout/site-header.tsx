@@ -6,8 +6,17 @@ import { BrandMark } from "@/components/shared/brand-mark";
 import { DesktopNavigation } from "@/components/layout/desktop-navigation";
 import { LanguageSelector } from "@/components/i18n/language-selector";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
+import {
+  getHeaderNavigation,
+  getResourcesNavigation,
+} from "@/sanity/navigation";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const [navItems, resourceItems] = await Promise.all([
+    getHeaderNavigation(),
+    getResourcesNavigation(),
+  ]);
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.06] bg-[#050b18]/80 backdrop-blur-xl">
       <Container className="flex h-18 items-center justify-between">
@@ -15,7 +24,7 @@ export function SiteHeader() {
           <BrandMark />
         </Link>
 
-        <DesktopNavigation items={company.navItems} />
+        <DesktopNavigation items={navItems} resourceItems={resourceItems} />
 
         <div className="hidden items-center gap-5 lg:flex">
           <LanguageSelector />
@@ -27,7 +36,7 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        <MobileNavigation items={company.navItems} />
+        <MobileNavigation items={navItems} resourceItems={resourceItems} />
       </Container>
     </header>
   );

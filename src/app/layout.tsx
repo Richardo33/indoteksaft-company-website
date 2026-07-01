@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { LanguageProvider } from "@/components/i18n/language-provider";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { SanityVisualEditing } from "@/components/shared/sanity-visual-editing";
 import { company } from "@/config/company";
 import { env } from "@/lib/server/env";
 
@@ -111,6 +112,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: organizationSchema }}
         />
+        <SanityVisualEditing />
       </body>
     </html>
   );

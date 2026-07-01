@@ -4,24 +4,35 @@ import Link from "next/link";
 import { BriefcaseBusiness, Newspaper, UsersRound } from "lucide-react";
 import { useState } from "react";
 
+import { useLanguage } from "@/components/i18n/language-provider";
 import { Container } from "@/components/shared/container";
-import { resourceMenuItems, type ResourceMenuItem } from "@/config/resources";
-import type { NavItem } from "@/types/company";
+import { pickLocalized } from "@/lib/i18n/localized-content";
+import type { CmsNavigationItem } from "@/sanity/navigation";
 
 type DesktopNavigationProps = {
-  items: readonly NavItem[];
+  items: readonly CmsNavigationItem[];
+  resourceItems: readonly CmsNavigationItem[];
 };
 
 const resourceIcons = {
   portfolio: BriefcaseBusiness,
   client: UsersRound,
   article: Newspaper,
-} satisfies Record<
-  ResourceMenuItem["icon"],
-  React.ComponentType<{ size?: number; className?: string }>
->;
+} satisfies Record<string, React.ComponentType<{ size?: number; className?: string }>>;
 
-export function DesktopNavigation({ items }: DesktopNavigationProps) {
+function getResourceIcon(iconName?: string) {
+  if (iconName && iconName in resourceIcons) {
+    return resourceIcons[iconName as keyof typeof resourceIcons];
+  }
+
+  return Newspaper;
+}
+
+export function DesktopNavigation({
+  items,
+  resourceItems,
+}: DesktopNavigationProps) {
+  const { locale } = useLanguage();
   const [resourcesOpen, setResourcesOpen] = useState(false);
 
   return (
@@ -31,10 +42,12 @@ export function DesktopNavigation({ items }: DesktopNavigationProps) {
         className="hidden items-center gap-7 lg:flex"
       >
         {items.map((item) => {
-          if (item.label === "Resources") {
+          const label = pickLocalized(item.label, locale);
+
+          if (item.href === "/resources") {
             return (
               <button
-                key={item.label}
+                key={item.href}
                 type="button"
                 aria-expanded={resourcesOpen}
                 aria-controls="resources-navigation-drawer"
@@ -45,7 +58,7 @@ export function DesktopNavigation({ items }: DesktopNavigationProps) {
                 }`}
                 onClick={() => setResourcesOpen((current) => !current)}
               >
-                {item.label}
+                {label}
               </button>
             );
           }
@@ -57,7 +70,7 @@ export function DesktopNavigation({ items }: DesktopNavigationProps) {
               className="text-sm font-medium text-slate-400 transition-colors hover:text-cyan-300"
               onClick={() => setResourcesOpen(false)}
             >
-              {item.label}
+              {label}
             </Link>
           );
         })}
@@ -74,8 +87,9 @@ export function DesktopNavigation({ items }: DesktopNavigationProps) {
             </span>
 
             <div className="mt-4 grid gap-4 md:grid-cols-3">
-              {resourceMenuItems.map((resource) => {
-                const Icon = resourceIcons[resource.icon];
+              {resourceItems.map((resource) => {
+                const Icon = getResourceIcon(resource.iconName);
+                const label = pickLocalized(resource.label, locale);
 
                 return (
                   <Link
@@ -88,7 +102,7 @@ export function DesktopNavigation({ items }: DesktopNavigationProps) {
                       <Icon aria-hidden="true" size={17} />
                     </span>
                     <span className="text-base font-medium text-slate-700 transition group-hover:text-blue-600">
-                      {resource.label}
+                      {label}
                     </span>
                   </Link>
                 );

@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Download, LoaderCircle, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -46,13 +46,34 @@ type DownloadInput = z.input<typeof downloadSchema>;
 
 type CompanyProfileDownloadDialogProps = {
   downloadUrl?: string;
+  label?: string;
+  description?: string;
+  dialogTitle?: string;
+  dialogDescription?: string;
+  submitLabel?: string;
+  message?: string;
 };
 
 export function CompanyProfileDownloadDialog({
   downloadUrl = "/resources/brosur",
+  label = "Download Company Profile",
+  description = "Full capabilities overview (PDF)",
+  dialogTitle = "Download Company Profile",
+  dialogDescription = "Isi data singkat berikut agar tim sales kami dapat membantu follow-up kebutuhan perusahaan Anda.",
+  submitLabel = "Submit & Download",
+  message = "Download Company Profile request. Please notify the sales team for follow-up.",
 }: CompanyProfileDownloadDialogProps) {
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState<ContactApiResponse | null>(null);
+  const [setting, setSetting] = useState({
+    downloadUrl,
+    label,
+    description,
+    dialogTitle,
+    dialogDescription,
+    submitLabel,
+    message,
+  });
   const {
     register,
     handleSubmit,
@@ -71,6 +92,40 @@ export function CompanyProfileDownloadDialog({
     },
   });
 
+  useEffect(() => {
+    let active = true;
+
+    async function loadSetting() {
+      try {
+        const response = await fetch(
+          "/api/v1/site-settings/company-profile-download",
+          { cache: "no-store" },
+        );
+        if (!response.ok) return;
+
+        const data = (await response.json()) as Partial<typeof setting> & {
+          href?: string;
+        };
+
+        if (!active) return;
+
+        setSetting((current) => ({
+          ...current,
+          ...data,
+          downloadUrl: data.href ?? data.downloadUrl ?? current.downloadUrl,
+        }));
+      } catch {
+        // Fallback props stay active when CMS settings are unavailable.
+      }
+    }
+
+    void loadSetting();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const closeDialog = () => {
     setOpen(false);
     setResult(null);
@@ -83,8 +138,7 @@ export function CompanyProfileDownloadDialog({
       const response = await submitContact({
         ...values,
         leadType: "company_profile_download",
-        message:
-          "Download Company Profile request. Please notify the sales team for follow-up.",
+        message: setting.message,
       });
 
       setResult(response);
@@ -92,7 +146,7 @@ export function CompanyProfileDownloadDialog({
       if (response.ok) {
         reset();
         window.setTimeout(() => {
-          window.location.href = downloadUrl;
+          window.location.href = setting.downloadUrl;
         }, 700);
       }
     } catch {
@@ -124,11 +178,10 @@ export function CompanyProfileDownloadDialog({
                     id="company-profile-download-title"
                     className="mt-3 text-2xl font-bold tracking-[-0.04em] text-slate-950"
                   >
-                    Download Company Profile
+                    {setting.dialogTitle}
                   </h2>
                   <p className="mt-3 max-w-xl text-sm leading-7 text-slate-500">
-                    Isi data singkat berikut agar tim sales kami dapat membantu
-                    follow-up kebutuhan perusahaan Anda.
+                    {setting.dialogDescription}
                   </p>
                 </div>
                 <button
@@ -257,7 +310,7 @@ export function CompanyProfileDownloadDialog({
                         Sending...
                       </>
                     ) : (
-                      "Submit & Download"
+                      setting.submitLabel
                     )}
                   </button>
                 </div>
@@ -280,10 +333,10 @@ export function CompanyProfileDownloadDialog({
         </div>
         <div className="text-left">
           <span className="block text-sm font-bold text-blue-600">
-            Download Company Profile
+            {setting.label}
           </span>
           <span className="mt-1 block text-sm text-slate-500">
-            Full capabilities overview (PDF)
+            {setting.description}
           </span>
         </div>
       </button>

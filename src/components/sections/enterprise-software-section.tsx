@@ -1,23 +1,36 @@
 "use client";
 
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Container } from "@/components/shared/container";
+import { useLanguage } from "@/components/i18n/language-provider";
 import { softwareProductPages, type ProductTheme } from "@/config/products";
+import { pickLocalized } from "@/lib/i18n/localized-content";
+import type { HomeProductCarouselItem } from "@/sanity/home";
 
-export function EnterpriseSoftwareSection() {
+type EnterpriseSoftwareSectionProps = {
+  productPages?: HomeProductCarouselItem[][];
+};
+
+export function EnterpriseSoftwareSection({
+  productPages,
+}: EnterpriseSoftwareSectionProps) {
+  const { locale } = useLanguage();
+  const pages =
+    productPages && productPages.length > 0 ? productPages : softwareProductPages;
   const [activePage, setActivePage] = useState(0);
-  const products = softwareProductPages[activePage];
+  const products = pages[activePage] ?? pages[0] ?? [];
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
-      setActivePage((current) => (current + 1) % softwareProductPages.length);
+      setActivePage((current) => (current + 1) % pages.length);
     }, 2_500);
 
     return () => window.clearInterval(intervalId);
-  }, []);
+  }, [pages.length]);
 
   return (
     <section
@@ -53,18 +66,30 @@ export function EnterpriseSoftwareSection() {
         </div>
 
         <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
-            <article key={product.name} className="text-center">
-              <LaptopMockup theme={product.theme} />
-              <h3 className="mx-auto mt-6 line-clamp-2 min-h-12 max-w-64 text-sm font-bold leading-6 text-white">
-                {product.name}
-              </h3>
-            </article>
-          ))}
+          {products.map((product) => {
+            const productName =
+              typeof product.name === "string"
+                ? product.name
+                : pickLocalized(product.name, locale);
+            const productImage = "image" in product ? product.image : undefined;
+
+            return (
+              <article key={product.slug} className="text-center" data-i18n-skip>
+                <LaptopMockup
+                  theme={product.theme}
+                  screenImage={productImage}
+                  screenAlt={productName}
+                />
+                <h3 className="mx-auto mt-6 line-clamp-2 min-h-12 max-w-64 text-sm font-bold leading-6 text-white">
+                  {productName}
+                </h3>
+              </article>
+            );
+          })}
         </div>
 
         <div className="mt-14 flex items-center justify-center gap-3">
-          {softwareProductPages.map((_, index) => (
+          {pages.map((_, index) => (
             <button
               key={index}
               type="button"
@@ -86,12 +111,16 @@ export function EnterpriseSoftwareSection() {
 
 type LaptopMockupProps = {
   theme: ProductTheme;
+  screenImage?: string;
+  screenAlt?: string;
   surfaceClassName?: string;
   fadeClassName?: string;
 };
 
 export function LaptopMockup({
   theme,
+  screenImage,
+  screenAlt = "",
   surfaceClassName = "bg-[#0d2f86]",
   fadeClassName = "via-[#0d2f86]/70 to-[#0d2f86]",
 }: LaptopMockupProps) {
@@ -118,7 +147,19 @@ export function LaptopMockup({
       <div className="relative z-20 mt-10 w-[76%]">
         <div className="rounded-t-md border-[5px] border-slate-950 bg-slate-950 shadow-2xl shadow-black/25">
           <div className="aspect-[16/9] overflow-hidden rounded-sm bg-white p-2">
-            <LaptopScreen theme={theme} />
+            {screenImage ? (
+              <div className="relative h-full overflow-hidden rounded bg-white">
+                <Image
+                  src={screenImage}
+                  alt={screenAlt}
+                  fill
+                  sizes="260px"
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <LaptopScreen theme={theme} />
+            )}
           </div>
         </div>
 

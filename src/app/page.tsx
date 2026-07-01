@@ -7,11 +7,24 @@ import { InsightsSection } from "@/components/sections/insight-section";
 import { MetricsSection } from "@/components/sections/metrics-section";
 import { ProductsSection } from "@/components/sections/products-section";
 import { Reveal } from "@/components/shared/reveal";
+import {
+  getHomeArticlePages,
+  getHomeHero,
+  getHomeProductPages,
+} from "@/sanity/home";
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const [hero, productPages, articlePagesData] = await Promise.all([
+    getHomeHero(),
+    getHomeProductPages(),
+    getHomeArticlePages(),
+  ]);
+
   return (
     <main>
-      <HeroSection />
+      <HeroSection content={hero} />
       <Reveal>
         <MetricsSection />
       </Reveal>
@@ -22,10 +35,10 @@ export default function HomePage() {
         <ProductsSection />
       </Reveal>
       <Reveal>
-        <EnterpriseSoftwareSection />
+        <EnterpriseSoftwareSection productPages={productPages} />
       </Reveal>
       <Reveal>
-        <InsightsSection />
+        <InsightsSection articlePagesData={articlePagesData} />
       </Reveal>
       <Reveal>
         <IndustriesSection />

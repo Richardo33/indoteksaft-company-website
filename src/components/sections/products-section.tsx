@@ -1,52 +1,23 @@
 import Image from "next/image";
 import { ArrowRight, Check, Code2, RadioTower, ServerCog } from "lucide-react";
+import type { ComponentType } from "react";
 
 import { Container } from "@/components/shared/container";
 import { Reveal } from "@/components/shared/reveal";
+import { getHomeServiceCards } from "@/sanity/home";
 
-const technologySolutions = [
-  {
-    title: "IT Infrastructure Solutions",
-    description:
-      "Comprehensive infrastructure solutions designed to optimize performance, strengthen security, and support the evolving needs of modern enterprises.",
-    image: "/images/industry-defense.png",
-    icon: ServerCog,
-    href: "/solutions#infrastructure",
-    features: [
-      "Secure & Reliable Infrastructure",
-      "High Availability & Scalability",
-      "24/7 Monitoring & Support",
-    ],
-  },
-  {
-    title: "Tech Delivery Solutions",
-    description:
-      "Comprehensive technology delivery services that transform business requirements into secure, scalable, and future-ready digital solutions.",
-    image: "/images/industry-enterprise.png",
-    icon: Code2,
-    href: "/solutions#delivery",
-    features: [
-      "Custom Development",
-      "Scalable Architecture",
-      "End-to-End Delivery",
-    ],
-  },
-  {
-    title: "Telecommunication Solutions",
-    description:
-      "Comprehensive telecommunications services to support network development, infrastructure maintenance, and reliable connectivity.",
-    image: "/images/industry-telecom.png",
-    icon: RadioTower,
-    href: "/solutions#telecommunication",
-    features: [
-      "BTS Installation & Upgrade",
-      "Site Maintenance",
-      "Civil, Mechanical & Electrical (CME)",
-    ],
-  },
-] as const;
+const solutionIcons: Record<
+  string,
+  ComponentType<{ size?: number; className?: string }>
+> = {
+  ServerCog,
+  Code2,
+  RadioTower,
+};
 
-export function ProductsSection() {
+export async function ProductsSection() {
+  const technologySolutions = await getHomeServiceCards();
+
   return (
     <section
       id="products"
@@ -73,10 +44,10 @@ export function ProductsSection() {
 
         <div className="mt-14 grid gap-8 lg:grid-cols-3">
           {technologySolutions.map((solution, index) => {
-            const Icon = solution.icon;
+            const Icon = solutionIcons[solution.iconName] ?? ServerCog;
             const featureSlots = Array.from(
               { length: 3 },
-              (_, index) => solution.features[index] ?? null,
+              (_, index) => solution.points[index] ?? null,
             );
 
             return (
@@ -87,7 +58,7 @@ export function ProductsSection() {
               >
                 <div className="relative aspect-video overflow-hidden bg-cyan-50">
                   <Image
-                    src={solution.image}
+                    src={solution.image || "/images/industry-defense.png"}
                     alt=""
                     fill
                     sizes="(max-width: 1024px) 100vw, 30vw"

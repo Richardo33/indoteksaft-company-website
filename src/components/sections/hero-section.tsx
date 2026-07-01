@@ -4,45 +4,31 @@ import Image from "next/image";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 
 import { useLanguage } from "@/components/i18n/language-provider";
-import { company } from "@/config/company";
 import { Container } from "@/components/shared/container";
 import { HeroParticles } from "@/components/shared/hero-particles";
 import { RotatingTypeText } from "@/components/shared/rotating-type-text";
+import { pickLocalized } from "@/lib/i18n/localized-content";
+import type { HomeHeroContent } from "@/sanity/home";
 
-const heroCopy = {
-  en: {
-    eyebrow: "Indonesia's critical tech partner",
-    titlePrefix: "Delivering",
-    rotatingWords: [
-      "Defense-Grade Infrastructure",
-      "Sovereign Cloud Platforms",
-      "Mission-Critical Cybersecurity",
-      "AI-Driven Operations",
-    ],
-    titleSuffix: "at National Scale",
-    description: `${company.legalName} engineers end-to-end technology ecosystems from datacenter design to AI-driven operations trusted by 200+ organizations across Indonesia's most critical sectors.`,
-    primaryCta: "Start Free Consultation",
-    secondaryCta: "Explore Solutions",
-  },
-  id: {
-    eyebrow: "Mitra teknologi kritikal Indonesia",
-    titlePrefix: "Menghadirkan",
-    rotatingWords: [
-      "Infrastruktur Kelas Pertahanan",
-      "Platform Sovereign Cloud",
-      "Keamanan Siber Mission-Critical",
-      "Operasi Berbasis AI",
-    ],
-    titleSuffix: "Berskala Nasional",
-    description: `${company.legalName} membangun ekosistem teknologi end-to-end dari desain datacenter hingga operasi berbasis AI yang dipercaya oleh 200+ organisasi di sektor paling kritikal Indonesia.`,
-    primaryCta: "Mulai Konsultasi Gratis",
-    secondaryCta: "Jelajahi Solusi",
-  },
-} as const;
+type HeroSectionProps = {
+  content?: HomeHeroContent;
+};
 
-export function HeroSection() {
+export function HeroSection({ content }: HeroSectionProps) {
   const { locale } = useLanguage();
-  const copy = heroCopy[locale];
+  const copy = {
+    eyebrow: pickLocalized(content?.eyebrow, locale),
+    titlePrefix: pickLocalized(content?.titlePrefix, locale),
+    rotatingWords:
+      content?.rotatingWords.map((word) => pickLocalized(word, locale)).filter(Boolean) ??
+      [],
+    titleSuffix: pickLocalized(content?.titleSuffix, locale),
+    description: pickLocalized(content?.description, locale),
+    primaryCta: pickLocalized(content?.primaryCta, locale),
+    primaryHref: content?.primaryHref ?? "/contact",
+    secondaryCta: pickLocalized(content?.secondaryCta, locale),
+    secondaryHref: content?.secondaryHref ?? "/solutions",
+  };
 
   return (
     <section
@@ -51,7 +37,7 @@ export function HeroSection() {
       className="relative isolate min-h-190 overflow-hidden pt-18"
     >
       <Image
-        src="/images/hero-bg.png"
+        src={content?.backgroundImage ?? "/images/hero-bg.png"}
         alt=""
         fill
         priority
@@ -100,14 +86,14 @@ export function HeroSection() {
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <a
-              href="/contact"
+              href={copy.primaryHref}
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 text-sm font-semibold text-white shadow-xl shadow-blue-600/25 transition hover:-translate-y-0.5 hover:bg-blue-500"
             >
               {copy.primaryCta}
               <ArrowRight aria-hidden="true" size={17} />
             </a>
             <a
-              href="/solutions"
+              href={copy.secondaryHref}
               className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/15 bg-white/4 px-6 text-sm font-semibold text-white transition hover:border-cyan-300/40 hover:bg-cyan-300/6"
             >
               {copy.secondaryCta}

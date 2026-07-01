@@ -1,12 +1,14 @@
-import { company } from "@/config/company";
 import { Container } from "@/components/shared/container";
 import { Reveal } from "@/components/shared/reveal";
+import { getHomeMetrics } from "@/sanity/home";
 
-export function MetricsSection() {
+export async function MetricsSection() {
+  const metrics = await getHomeMetrics();
+
   return (
     <section aria-label="Company metrics" className="bg-[#0d2f86]">
       <Container className="grid grid-cols-2 gap-y-8 py-10 sm:py-12 lg:grid-cols-4">
-        {company.metrics.map((metric, index) => (
+        {metrics.map((metric, index) => (
           <Reveal
             key={metric.label}
             delay={index * 90}

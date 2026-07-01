@@ -38,6 +38,47 @@ const seoFields = [
   }),
 ];
 
+const localizedStringField = (name: string, title: string) =>
+  defineField({
+    name,
+    title,
+    type: "object",
+    fields: [
+      defineField({ name: "en", title: "English", type: "string" }),
+      defineField({ name: "id", title: "Indonesia", type: "string" }),
+    ],
+  });
+
+const localizedTextField = (name: string, title: string, rows = 4) =>
+  defineField({
+    name,
+    title,
+    type: "object",
+    fields: [
+      defineField({ name: "en", title: "English", type: "text", rows }),
+      defineField({ name: "id", title: "Indonesia", type: "text", rows }),
+    ],
+  });
+
+const localizedStringArrayField = (name: string, title: string) =>
+  defineField({
+    name,
+    title,
+    type: "array",
+    of: [
+      defineArrayMember({
+        type: "object",
+        fields: [
+          defineField({ name: "en", title: "English", type: "string" }),
+          defineField({ name: "id", title: "Indonesia", type: "string" }),
+        ],
+        preview: {
+          select: { title: "en", subtitle: "id" },
+        },
+      }),
+    ],
+  });
+
 export const schemaTypes = [
   defineType({
     name: "sitePage",
@@ -65,14 +106,20 @@ export const schemaTypes = [
       defineField({ name: "pageSlug", title: "Page Slug", type: "string", description: "Contoh: home, products, company, contact" }),
       defineField({ name: "placement", title: "Placement", type: "string", initialValue: "hero" }),
       defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+      localizedStringField("eyebrowI18n", "Eyebrow Bilingual"),
       defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
       defineField({ name: "subtitle", title: "Subtitle", type: "string" }),
+      localizedStringField("subtitleI18n", "Subtitle Bilingual"),
       defineField({ name: "description", title: "Description", type: "text", rows: 4 }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 4),
       defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
       defineField({ name: "backgroundImage", title: "Background Image", type: "image", options: { hotspot: true } }),
       defineField({ name: "ctaLabel", title: "CTA Label", type: "string" }),
+      localizedStringField("ctaLabelI18n", "CTA Label Bilingual"),
       defineField({ name: "ctaHref", title: "CTA URL", type: "string" }),
       defineField({ name: "secondaryCtaLabel", title: "Secondary CTA Label", type: "string" }),
+      localizedStringField("secondaryCtaLabelI18n", "Secondary CTA Label Bilingual"),
       defineField({ name: "secondaryCtaHref", title: "Secondary CTA URL", type: "string" }),
       defineField({ name: "startsAt", title: "Starts At", type: "datetime" }),
       defineField({ name: "endsAt", title: "Ends At", type: "datetime" }),
@@ -85,14 +132,96 @@ export const schemaTypes = [
   }),
 
   defineType({
+    name: "bannerRotatingTerm",
+    title: "Hero Rotating Terms",
+    type: "document",
+    fields: [
+      defineField({ name: "pageSlug", title: "Page Slug", type: "string", initialValue: "home" }),
+      defineField({
+        name: "text",
+        title: "Legacy Text",
+        type: "string",
+        readOnly: true,
+        hidden: true,
+      }),
+      localizedStringField("textI18n", "Text Bilingual"),
+      defineField({
+        name: "language",
+        title: "Legacy Language",
+        type: "string",
+        initialValue: "en",
+        readOnly: true,
+        hidden: true,
+      }),
+      statusField,
+      sortOrderField,
+    ],
+    preview: {
+      select: { title: "textI18n.en", subtitle: "textI18n.id" },
+      prepare({ title, subtitle }) {
+        return {
+          title: title || subtitle || "Hero rotating term",
+          subtitle: subtitle ? `ID: ${subtitle}` : "Indonesia translation empty",
+        };
+      },
+    },
+  }),
+
+  defineType({
+    name: "metric",
+    title: "Homepage Metrics",
+    type: "document",
+    fields: [
+      defineField({ name: "label", title: "Label", type: "string", validation: (Rule) => Rule.required() }),
+      defineField({ name: "value", title: "Value", type: "string", validation: (Rule) => Rule.required() }),
+      defineField({ name: "suffix", title: "Suffix", type: "string" }),
+      defineField({ name: "description", title: "Description", type: "text", rows: 2 }),
+      defineField({ name: "pageSlug", title: "Page Slug", type: "string", initialValue: "home" }),
+      statusField,
+      sortOrderField,
+    ],
+    preview: {
+      select: { title: "label", subtitle: "value" },
+    },
+  }),
+
+  defineType({
+    name: "serviceCard",
+    title: "Homepage Service Cards",
+    type: "document",
+    fields: [
+      defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (Rule) => Rule.required() }),
+      defineField({ name: "description", title: "Description", type: "text", rows: 4, validation: (Rule) => Rule.required() }),
+      defineField({ name: "iconName", title: "Icon Name", type: "string" }),
+      defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+      defineField({ name: "detailHref", title: "Detail URL", type: "string" }),
+      defineField({
+        name: "points",
+        title: "Points",
+        type: "array",
+        of: [defineArrayMember({ type: "string" })],
+      }),
+      statusField,
+      sortOrderField,
+    ],
+    preview: {
+      select: { title: "title", media: "image" },
+    },
+  }),
+
+  defineType({
     name: "product",
     title: "Products",
     type: "document",
     fields: [
       defineField({ name: "name", title: "Name", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("nameI18n", "Name Bilingual"),
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "name" }, validation: (Rule) => Rule.required() }),
       defineField({ name: "shortName", title: "Short Name", type: "string" }),
+      localizedStringField("shortNameI18n", "Short Name Bilingual"),
       defineField({ name: "subtitle", title: "Subtitle", type: "string" }),
+      localizedStringField("subtitleI18n", "Subtitle Bilingual"),
       defineField({ name: "category", title: "Category", type: "string" }),
       defineField({
         name: "theme",
@@ -103,7 +232,14 @@ export const schemaTypes = [
         },
       }),
       defineField({ name: "description", title: "Description", type: "text", rows: 5, validation: (Rule) => Rule.required() }),
-      defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 5),
+      defineField({
+        name: "image",
+        title: "Product Screen Image (Laptop Display)",
+        description: "Gambar ini akan tampil di layar laptop pada card/list/detail product.",
+        type: "image",
+        options: { hotspot: true },
+      }),
       defineField({ name: "brochureUrl", title: "Brochure URL", type: "string" }),
       defineField({ name: "demoUrl", title: "Demo URL", type: "string" }),
       defineField({ name: "isFeatured", title: "Featured", type: "boolean", initialValue: false }),
@@ -113,12 +249,14 @@ export const schemaTypes = [
         type: "array",
         of: [defineArrayMember({ type: "string" })],
       }),
+      localizedStringArrayField("featuresI18n", "Features Bilingual"),
       defineField({
         name: "benefits",
         title: "Benefits",
         type: "array",
         of: [defineArrayMember({ type: "string" })],
       }),
+      localizedStringArrayField("benefitsI18n", "Benefits Bilingual"),
       statusField,
       sortOrderField,
     ],
@@ -133,8 +271,10 @@ export const schemaTypes = [
     type: "document",
     fields: [
       defineField({ name: "name", title: "Name", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("nameI18n", "Name Bilingual"),
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "name" }, validation: (Rule) => Rule.required() }),
       defineField({ name: "description", title: "Description", type: "text", rows: 3 }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 3),
       sortOrderField,
     ],
   }),
@@ -145,12 +285,21 @@ export const schemaTypes = [
     type: "document",
     fields: [
       defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (Rule) => Rule.required() }),
       defineField({ name: "category", title: "Category", type: "reference", to: [{ type: "articleCategory" }] }),
       defineField({ name: "categoryName", title: "Fallback Category Name", type: "string" }),
+      localizedStringField("categoryNameI18n", "Fallback Category Name Bilingual"),
       defineField({ name: "excerpt", title: "Excerpt", type: "text", rows: 3, validation: (Rule) => Rule.required() }),
+      localizedTextField("excerptI18n", "Excerpt Bilingual", 3),
       defineField({ name: "readTime", title: "Read Time", type: "string" }),
-      defineField({ name: "coverImage", title: "Cover Image", type: "image", options: { hotspot: true } }),
+      defineField({
+        name: "coverImage",
+        title: "Article Cover Image / Thumbnail",
+        description: "Gambar ini tampil di card article, halaman detail article, dan Knowledge Center.",
+        type: "image",
+        options: { hotspot: true },
+      }),
       defineField({
         name: "sections",
         title: "Content Sections",
@@ -160,11 +309,27 @@ export const schemaTypes = [
             type: "object",
             fields: [
               defineField({ name: "heading", title: "Heading", type: "string", validation: (Rule) => Rule.required() }),
+              localizedStringField("headingI18n", "Heading Bilingual"),
               defineField({
                 name: "body",
                 title: "Paragraphs",
                 type: "array",
                 of: [defineArrayMember({ type: "text", rows: 4 })],
+              }),
+              defineField({
+                name: "bodyI18n",
+                title: "Paragraphs Bilingual",
+                type: "array",
+                of: [
+                  defineArrayMember({
+                    type: "object",
+                    fields: [
+                      defineField({ name: "en", title: "English", type: "text", rows: 4 }),
+                      defineField({ name: "id", title: "Indonesia", type: "text", rows: 4 }),
+                    ],
+                    preview: { select: { title: "en", subtitle: "id" } },
+                  }),
+                ],
               }),
             ],
           }),
@@ -186,12 +351,18 @@ export const schemaTypes = [
     type: "document",
     fields: [
       defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (Rule) => Rule.required() }),
       defineField({ name: "clientName", title: "Client Name", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("clientNameI18n", "Client Name Bilingual"),
       defineField({ name: "category", title: "Category", type: "string" }),
+      localizedStringField("categoryI18n", "Category Bilingual"),
       defineField({ name: "summary", title: "Summary", type: "text", rows: 3 }),
+      localizedTextField("summaryI18n", "Summary Bilingual", 3),
       defineField({ name: "description", title: "Description", type: "text", rows: 5 }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 5),
       defineField({ name: "outcome", title: "Outcome", type: "text", rows: 3 }),
+      localizedTextField("outcomeI18n", "Outcome Bilingual", 3),
       defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
       statusField,
       sortOrderField,
@@ -240,10 +411,13 @@ export const schemaTypes = [
     type: "document",
     fields: [
       defineField({ name: "label", title: "Tab Label", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("labelI18n", "Tab Label Bilingual"),
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "label" }, validation: (Rule) => Rule.required() }),
       defineField({ name: "tabId", title: "Tab ID", type: "string", description: "Contoh: infrastructure, delivery, telecommunication" }),
       defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
       defineField({ name: "description", title: "Description", type: "text", rows: 4, validation: (Rule) => Rule.required() }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 4),
       defineField({ name: "iconName", title: "Icon Name", type: "string" }),
       defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
       defineField({
@@ -255,7 +429,9 @@ export const schemaTypes = [
             type: "object",
             fields: [
               defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+              localizedStringField("titleI18n", "Title Bilingual"),
               defineField({ name: "description", title: "Description", type: "text", rows: 3, validation: (Rule) => Rule.required() }),
+              localizedTextField("descriptionI18n", "Description Bilingual", 3),
               defineField({ name: "iconName", title: "Icon Name", type: "string" }),
             ],
           }),
@@ -281,6 +457,98 @@ export const schemaTypes = [
       statusField,
       sortOrderField,
     ],
+  }),
+
+  defineType({
+    name: "companyStatement",
+    title: "Company Statements",
+    type: "document",
+    fields: [
+      defineField({ name: "key", title: "Key", type: "string", validation: (Rule) => Rule.required() }),
+      defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+      localizedStringField("eyebrowI18n", "Eyebrow Bilingual"),
+      defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
+      defineField({ name: "description", title: "Description", type: "text", rows: 5, validation: (Rule) => Rule.required() }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 5),
+      defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+      statusField,
+      sortOrderField,
+    ],
+    preview: {
+      select: { title: "title", subtitle: "key", media: "image" },
+    },
+  }),
+
+  defineType({
+    name: "companyValue",
+    title: "Company Values",
+    type: "document",
+    fields: [
+      defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
+      defineField({ name: "description", title: "Description", type: "text", rows: 3, validation: (Rule) => Rule.required() }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 3),
+      defineField({ name: "iconName", title: "Icon Name", type: "string" }),
+      statusField,
+      sortOrderField,
+    ],
+    preview: {
+      select: { title: "title", subtitle: "description" },
+    },
+  }),
+
+  defineType({
+    name: "companyLeader",
+    title: "Company Leadership",
+    type: "document",
+    fields: [
+      defineField({ name: "name", title: "Name", type: "string", validation: (Rule) => Rule.required() }),
+      defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "name" }, validation: (Rule) => Rule.required() }),
+      defineField({ name: "role", title: "Role", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("roleI18n", "Role Bilingual"),
+      defineField({ name: "bio", title: "Bio", type: "text", rows: 4 }),
+      localizedTextField("bioI18n", "Bio Bilingual", 4),
+      defineField({ name: "photo", title: "Photo", type: "image", options: { hotspot: true } }),
+      defineField({ name: "linkedinUrl", title: "LinkedIn URL", type: "string" }),
+      statusField,
+      sortOrderField,
+    ],
+    preview: {
+      select: { title: "name", subtitle: "role", media: "photo" },
+    },
+  }),
+
+  defineType({
+    name: "navigationItem",
+    title: "Navigation Items",
+    type: "document",
+    fields: [
+      defineField({ name: "label", title: "Label", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("labelI18n", "Label Bilingual"),
+      defineField({ name: "href", title: "URL", type: "string", validation: (Rule) => Rule.required() }),
+      defineField({
+        name: "group",
+        title: "Group",
+        type: "string",
+        options: {
+          list: [
+            { title: "Header", value: "header" },
+            { title: "Footer Services", value: "footer_services" },
+            { title: "Footer Company", value: "footer_company" },
+            { title: "Footer Resources", value: "footer_resources" },
+            { title: "Resources Drawer", value: "resources_drawer" },
+          ],
+        },
+      }),
+      defineField({ name: "iconName", title: "Icon Name", type: "string" }),
+      defineField({ name: "openInNewTab", title: "Open in New Tab", type: "boolean", initialValue: false }),
+      statusField,
+      sortOrderField,
+    ],
+    preview: {
+      select: { title: "label", subtitle: "href" },
+    },
   }),
 
   defineType({

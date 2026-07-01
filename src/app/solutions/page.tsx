@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import { Container } from "@/components/shared/container";
 import { ContactSection } from "@/components/sections/contact-section";
 import { SolutionsTabs } from "@/components/sections/solutions-tabs";
+import { getSolutions } from "@/sanity/solutions";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Solutions",
@@ -13,7 +16,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SolutionsPage() {
+export default async function SolutionsPage() {
+  const solutions = await getSolutions();
+
   return (
     <main className="bg-white text-slate-950">
       <section className="pt-18">
@@ -32,7 +37,7 @@ export default function SolutionsPage() {
             </p>
           </div>
 
-          <SolutionsTabs />
+          <SolutionsTabs solutions={solutions} />
         </Container>
       </section>
 

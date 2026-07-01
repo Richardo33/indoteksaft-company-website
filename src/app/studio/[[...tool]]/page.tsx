@@ -1,13 +1,27 @@
-import { SimplePageShell } from "@/components/shared/simple-page-shell";
+import StudioClient from "./studio-client";
 
 export const dynamic = "force-dynamic";
 
 export default function StudioPage() {
   return (
-    <SimplePageShell
-      eyebrow="CMS"
-      title="Sanity Studio is prepared for the next phase"
-      description="The CMS entry point is intentionally disabled for the current production deployment while the content model and integration are being finalized."
-    />
+    <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            body > header,
+            body > footer,
+            body > script + div {
+              display: none !important;
+            }
+
+            body {
+              overflow: hidden !important;
+              background: #101119 !important;
+            }
+          `,
+        }}
+      />
+      <StudioClient />
+    </>
   );
 }
