@@ -9,6 +9,7 @@ import {
 } from "@/config/products";
 import type { LocalizedText } from "@/lib/i18n/localized-content";
 import { sanityClient } from "@/sanity/client";
+import { getSanityFetchOptions } from "@/sanity/fetch-options";
 
 export type CmsProductSummary = {
   slug: string;
@@ -177,16 +178,17 @@ const productSlugsQuery = `*[
 export async function getProductsPageData(): Promise<ProductsPageData> {
   try {
     const client = await getSanityFetchClient();
+    const fetchOptions = await getSanityFetchOptions(["products"]);
     const [banner, products] = await Promise.all([
       client.fetch<CmsProductsBanner | null>(
         productsBannerQuery,
         {},
-        { cache: "no-store" },
+        fetchOptions,
       ),
       client.fetch<CmsProductSummary[]>(
         productSummariesQuery,
         {},
-        { cache: "no-store" },
+        fetchOptions,
       ),
     ]);
 
@@ -194,7 +196,7 @@ export async function getProductsPageData(): Promise<ProductsPageData> {
       banner: banner
         ? { ...fallbackBanner, ...banner, image: banner.image ?? fallbackBanner.image }
         : fallbackBanner,
-      products: products.length > 0 ? products : fallbackProducts(),
+      products,
     };
   } catch (error) {
     console.warn("Failed to load products from Sanity, using fallback.", error);
@@ -213,12 +215,10 @@ export async function getProductBySlug(
     const product = await client.fetch<CmsProductDetail | null>(
       productDetailQuery,
       { slug },
-      { cache: "no-store" },
+      await getSanityFetchOptions(["products", `product:${slug}`]),
     );
 
-    if (product) {
-      return product;
-    }
+    return product;
   } catch (error) {
     console.warn("Failed to load product from Sanity, using fallback.", error);
   }
@@ -241,12 +241,10 @@ export async function getProductSlugs() {
     const rows = await client.fetch<{ slug: string }[]>(
       productSlugsQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 3600, tags: ["sitemap:products"] } },
     );
 
-    if (rows.length > 0) {
-      return rows.map((row) => row.slug);
-    }
+    return rows.map((row) => row.slug);
   } catch (error) {
     console.warn("Failed to load product slugs from Sanity, using fallback.", error);
   }

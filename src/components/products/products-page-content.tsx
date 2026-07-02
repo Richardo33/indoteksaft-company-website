@@ -40,7 +40,7 @@ export function ProductsPageContent({
       >
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[linear-gradient(90deg,#0d2f86_0%,#0d2f86_58%,#0a2571_68%,#06164b_78%,#06164b_100%)]"
+          className="absolute inset-0 bg-[linear-gradient(90deg,#0d2f86_0%,#0d2f86_57%,#0a2571_67%,#06164b_78%,#06164b_100%)]"
         />
         <div
           aria-hidden="true"
@@ -67,7 +67,7 @@ export function ProductsPageContent({
           </div>
         </Container>
 
-        <div className="absolute inset-y-0 right-0 z-0 hidden w-1/3 overflow-hidden lg:block">
+        <div className="absolute inset-y-0 right-0 z-0 hidden w-1/3 overflow-hidden bg-[#06164b] lg:block">
           <Image
             src={data.banner.image}
             alt=""
@@ -76,7 +76,7 @@ export function ProductsPageContent({
             sizes="33vw"
             className="object-cover object-center"
           />
-          <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-[#06164b] via-[#06164b]/55 to-transparent" />
+          <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-[#06164b] via-[#06164b]/70 to-transparent" />
         </div>
       </section>
 

@@ -9,6 +9,7 @@ import {
 } from "@/config/solutions";
 import type { LocalizedText } from "@/lib/i18n/localized-content";
 import { sanityClient } from "@/sanity/client";
+import { getSanityFetchOptions } from "@/sanity/fetch-options";
 
 export type CmsSolutionCapability = {
   title: LocalizedText;
@@ -112,7 +113,7 @@ export async function getSolutions(): Promise<CmsSolutionTab[]> {
         id?: string;
         image?: string;
       })[]
-    >(solutionsQuery, {}, { cache: "no-store" });
+    >(solutionsQuery, {}, await getSanityFetchOptions(["solutions"]));
 
     const fallback = fallbackSolutions();
     const solutions = rows
@@ -127,9 +128,7 @@ export async function getSolutions(): Promise<CmsSolutionTab[]> {
         capabilities: solution.capabilities ?? [],
       }));
 
-    if (solutions.length > 0) {
-      return solutions;
-    }
+    return solutions;
   } catch (error) {
     console.warn("Failed to load solutions from Sanity, using fallback.", error);
   }

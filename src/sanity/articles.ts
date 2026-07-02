@@ -5,6 +5,7 @@ import { draftMode } from "next/headers";
 import { articles as staticArticles, type Article } from "@/config/articles";
 import type { LocalizedText } from "@/lib/i18n/localized-content";
 import { sanityClient } from "@/sanity/client";
+import { getSanityFetchOptions } from "@/sanity/fetch-options";
 
 export type CmsArticleSummary = {
   slug: string;
@@ -136,7 +137,7 @@ export async function getArticles(): Promise<CmsArticleSummary[]> {
         date?: string;
         image?: string;
       })[]
-    >(articlesQuery, {}, { cache: "no-store" });
+    >(articlesQuery, {}, await getSanityFetchOptions(["articles"]));
 
     const fallback = staticArticles.map(fallbackSummary);
     const articles = rows
@@ -151,9 +152,7 @@ export async function getArticles(): Promise<CmsArticleSummary[]> {
         image: article.image ?? fallback[index % fallback.length]?.image ?? "/images/industry-enterprise.png",
       }));
 
-    if (articles.length > 0) {
-      return articles;
-    }
+    return articles;
   } catch (error) {
     console.warn("Failed to load articles from Sanity, using fallback.", error);
   }
@@ -176,7 +175,11 @@ export async function getArticleBySlug(
           bodyLegacy?: string[] | null;
         }[];
       }) | null
-    >(articleDetailQuery, { slug }, { cache: "no-store" });
+    >(
+      articleDetailQuery,
+      { slug },
+      await getSanityFetchOptions(["articles", `article:${slug}`]),
+    );
 
     if (article) {
       const fallback = staticArticles.find((item) => item.slug === slug);
@@ -197,6 +200,8 @@ export async function getArticleBySlug(
         })),
       };
     }
+
+    return null;
   } catch (error) {
     console.warn("Failed to load article from Sanity, using fallback.", error);
   }
@@ -219,12 +224,10 @@ export async function getArticleSlugs() {
     const rows = await client.fetch<{ slug: string }[]>(
       articleSlugsQuery,
       {},
-      { cache: "no-store" },
+      { next: { revalidate: 3600, tags: ["sitemap:articles"] } },
     );
 
-    if (rows.length > 0) {
-      return rows.map((row) => row.slug);
-    }
+    return rows.map((row) => row.slug);
   } catch (error) {
     console.warn("Failed to load article slugs from Sanity, using fallback.", error);
   }

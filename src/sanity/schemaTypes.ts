@@ -211,6 +211,87 @@ export const schemaTypes = [
   }),
 
   defineType({
+    name: "homeContactSection",
+    title: "Homepage Contact Section",
+    type: "document",
+    fields: [
+      defineField({
+        name: "eyebrow",
+        title: "Eyebrow",
+        type: "string",
+        validation: (Rule) => Rule.required(),
+      }),
+      localizedStringField("eyebrowI18n", "Eyebrow Bilingual"),
+      defineField({
+        name: "title",
+        title: "Title",
+        type: "string",
+        validation: (Rule) => Rule.required(),
+      }),
+      localizedStringField("titleI18n", "Title Bilingual"),
+      defineField({
+        name: "description",
+        title: "Description",
+        type: "text",
+        rows: 3,
+        validation: (Rule) => Rule.required(),
+      }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 3),
+      defineField({
+        name: "details",
+        title: "Left Side Details",
+        type: "array",
+        of: [
+          defineArrayMember({
+            type: "object",
+            fields: [
+              defineField({
+                name: "label",
+                title: "Label",
+                type: "string",
+                validation: (Rule) => Rule.required(),
+              }),
+              localizedStringField("labelI18n", "Label Bilingual"),
+              defineField({
+                name: "value",
+                title: "Value",
+                type: "string",
+                validation: (Rule) => Rule.required(),
+              }),
+              localizedStringField("valueI18n", "Value Bilingual"),
+              defineField({
+                name: "href",
+                title: "URL",
+                type: "string",
+              }),
+              defineField({
+                name: "iconName",
+                title: "Icon Name",
+                type: "string",
+                options: {
+                  list: [
+                    { title: "Email", value: "email" },
+                    { title: "Location", value: "location" },
+                    { title: "Download", value: "download" },
+                    { title: "Assessment", value: "assessment" },
+                  ],
+                },
+              }),
+            ],
+            preview: {
+              select: { title: "label", subtitle: "value" },
+            },
+          }),
+        ],
+      }),
+      statusField,
+    ],
+    preview: {
+      select: { title: "title", subtitle: "eyebrow" },
+    },
+  }),
+
+  defineType({
     name: "product",
     title: "Products",
     type: "document",
@@ -396,13 +477,18 @@ export const schemaTypes = [
     type: "document",
     fields: [
       defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (Rule) => Rule.required() }),
       defineField({ name: "description", title: "Description", type: "text", rows: 4, validation: (Rule) => Rule.required() }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 4),
       defineField({ name: "iconName", title: "Icon Name", type: "string" }),
       defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
       statusField,
       sortOrderField,
     ],
+    preview: {
+      select: { title: "title", subtitle: "iconName", media: "image" },
+    },
   }),
 
   defineType({
@@ -448,15 +534,21 @@ export const schemaTypes = [
     type: "document",
     fields: [
       defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (Rule) => Rule.required() }),
       defineField({ name: "description", title: "Description", type: "text", rows: 4 }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 4),
       defineField({ name: "eventDate", title: "Event Date", type: "datetime" }),
       defineField({ name: "location", title: "Location", type: "string" }),
+      localizedStringField("locationI18n", "Location Bilingual"),
       defineField({ name: "registrationUrl", title: "Registration URL", type: "string" }),
       defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
       statusField,
       sortOrderField,
     ],
+    preview: {
+      select: { title: "title", subtitle: "eventDate", media: "image" },
+    },
   }),
 
   defineType({
@@ -552,19 +644,226 @@ export const schemaTypes = [
   }),
 
   defineType({
+    name: "contactPage",
+    title: "Contact Page",
+    type: "document",
+    fields: [
+      defineField({
+        name: "eyebrow",
+        title: "Eyebrow",
+        type: "string",
+        validation: (Rule) => Rule.required(),
+      }),
+      localizedStringField("eyebrowI18n", "Eyebrow Bilingual"),
+      defineField({
+        name: "title",
+        title: "Title",
+        type: "string",
+        validation: (Rule) => Rule.required(),
+      }),
+      localizedStringField("titleI18n", "Title Bilingual"),
+      defineField({
+        name: "description",
+        title: "Description",
+        type: "text",
+        rows: 3,
+        validation: (Rule) => Rule.required(),
+      }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 3),
+      defineField({
+        name: "actions",
+        title: "Contact Actions",
+        type: "array",
+        of: [
+          defineArrayMember({
+            type: "object",
+            fields: [
+              defineField({
+                name: "label",
+                title: "Label",
+                type: "string",
+                validation: (Rule) => Rule.required(),
+              }),
+              localizedStringField("labelI18n", "Label Bilingual"),
+              defineField({
+                name: "value",
+                title: "Value / Description",
+                type: "string",
+                validation: (Rule) => Rule.required(),
+              }),
+              localizedStringField("valueI18n", "Value Bilingual"),
+              defineField({
+                name: "href",
+                title: "URL",
+                type: "string",
+              }),
+              defineField({
+                name: "iconName",
+                title: "Icon Name",
+                type: "string",
+                options: {
+                  list: [
+                    { title: "Download", value: "download" },
+                    { title: "WhatsApp", value: "whatsapp" },
+                    { title: "Email", value: "email" },
+                    { title: "Phone", value: "phone" },
+                  ],
+                },
+              }),
+            ],
+            preview: {
+              select: { title: "label", subtitle: "value" },
+            },
+          }),
+        ],
+      }),
+      defineField({
+        name: "locationLabel",
+        title: "Location Label",
+        type: "string",
+        validation: (Rule) => Rule.required(),
+      }),
+      localizedStringField("locationLabelI18n", "Location Label Bilingual"),
+      defineField({
+        name: "officeAddress",
+        title: "Office Address",
+        type: "text",
+        rows: 3,
+        validation: (Rule) => Rule.required(),
+      }),
+      localizedTextField("officeAddressI18n", "Office Address Bilingual", 3),
+      defineField({
+        name: "mapEmbedUrl",
+        title: "Google Maps Embed URL",
+        type: "url",
+      }),
+      statusField,
+      ...seoFields,
+    ],
+    preview: {
+      select: { title: "title", subtitle: "eyebrow" },
+    },
+  }),
+
+  defineType({
     name: "documentResource",
     title: "Documents / Brochures",
     type: "document",
     fields: [
       defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (Rule) => Rule.required() }),
       defineField({ name: "description", title: "Description", type: "text", rows: 3 }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 3),
       defineField({ name: "documentType", title: "Document Type", type: "string", initialValue: "brochure" }),
       defineField({ name: "file", title: "File", type: "file" }),
       defineField({ name: "fileUrl", title: "External File URL", type: "string" }),
       statusField,
       sortOrderField,
     ],
+    preview: {
+      select: { title: "title", subtitle: "documentType" },
+    },
+  }),
+
+  defineType({
+    name: "legalPage",
+    title: "Legal Pages",
+    type: "document",
+    fields: [
+      defineField({
+        name: "pageKey",
+        title: "Page Key",
+        type: "string",
+        validation: (Rule) => Rule.required(),
+        options: {
+          list: [
+            { title: "Privacy Policy", value: "privacy-policy" },
+            { title: "Terms & Conditions", value: "terms-and-conditions" },
+          ],
+        },
+      }),
+      defineField({ name: "eyebrow", title: "Eyebrow", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("eyebrowI18n", "Eyebrow Bilingual"),
+      defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
+      defineField({ name: "description", title: "Description", type: "text", rows: 3, validation: (Rule) => Rule.required() }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 3),
+      defineField({
+        name: "sections",
+        title: "Content Sections",
+        type: "array",
+        of: [
+          defineArrayMember({
+            type: "object",
+            fields: [
+              defineField({ name: "heading", title: "Heading", type: "string" }),
+              localizedStringField("headingI18n", "Heading Bilingual"),
+              defineField({
+                name: "body",
+                title: "Paragraphs",
+                type: "array",
+                of: [defineArrayMember({ type: "text", rows: 3 })],
+              }),
+              localizedStringArrayField("bodyI18n", "Paragraphs Bilingual"),
+            ],
+            preview: {
+              select: { title: "heading" },
+              prepare({ title }) {
+                return { title: title || "Intro section" };
+              },
+            },
+          }),
+        ],
+      }),
+      statusField,
+      ...seoFields,
+    ],
+    preview: {
+      select: { title: "title", subtitle: "pageKey" },
+    },
+  }),
+
+  defineType({
+    name: "careersPage",
+    title: "Careers Page",
+    type: "document",
+    fields: [
+      defineField({ name: "eyebrow", title: "Eyebrow", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("eyebrowI18n", "Eyebrow Bilingual"),
+      defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("titleI18n", "Title Bilingual"),
+      defineField({ name: "description", title: "Description", type: "text", rows: 3, validation: (Rule) => Rule.required() }),
+      localizedTextField("descriptionI18n", "Description Bilingual", 3),
+      defineField({ name: "sectionTitle", title: "Section Title", type: "string", validation: (Rule) => Rule.required() }),
+      localizedStringField("sectionTitleI18n", "Section Title Bilingual"),
+      defineField({ name: "sectionDescription", title: "Section Description", type: "text", rows: 4, validation: (Rule) => Rule.required() }),
+      localizedTextField("sectionDescriptionI18n", "Section Description Bilingual", 4),
+      defineField({
+        name: "departments",
+        title: "Departments / Opportunity Cards",
+        type: "array",
+        of: [
+          defineArrayMember({
+            type: "object",
+            fields: [
+              defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
+              localizedStringField("titleI18n", "Title Bilingual"),
+              defineField({ name: "description", title: "Description", type: "text", rows: 3, validation: (Rule) => Rule.required() }),
+              localizedTextField("descriptionI18n", "Description Bilingual", 3),
+            ],
+            preview: {
+              select: { title: "title", subtitle: "description" },
+            },
+          }),
+        ],
+      }),
+      statusField,
+      ...seoFields,
+    ],
+    preview: {
+      select: { title: "title", subtitle: "eyebrow" },
+    },
   }),
 
   defineType({

@@ -1,16 +1,79 @@
+"use client";
+
 import {
   ClipboardCheck,
+  Download,
   Mail,
   MapPin,
+  type LucideIcon,
 } from "lucide-react";
 
-import { company } from "@/config/company";
 import { Container } from "@/components/shared/container";
 import { CompanyProfileDownloadDialog } from "@/components/sections/company-profile-download-dialog";
 import { ContactFormLoader } from "@/components/sections/contact-form-loader";
 import { Reveal } from "@/components/shared/reveal";
+import { useLanguage } from "@/components/i18n/language-provider";
+import { pickLocalized } from "@/lib/i18n/localized-content";
+import type {
+  HomeContactDetail,
+  HomeContactSectionContent,
+} from "@/sanity/home";
 
-export function ContactSection() {
+type ContactSectionProps = {
+  content?: HomeContactSectionContent;
+};
+
+const iconMap: Record<string, LucideIcon> = {
+  assessment: ClipboardCheck,
+  download: Download,
+  email: Mail,
+  location: MapPin,
+};
+
+const fallbackContent: HomeContactSectionContent = {
+  eyebrow: { en: "Get started", id: "Mulai" },
+  title: { en: "Free Consultation", id: "Konsultasi Gratis" },
+  description: {
+    en: "Schedule a consultation with our technology architects to discuss your infrastructure needs and digital transformation roadmap.",
+    id: "Jadwalkan konsultasi dengan arsitek teknologi kami untuk membahas kebutuhan infrastruktur dan roadmap transformasi digital Anda.",
+  },
+  details: [
+    {
+      label: { en: "Email", id: "Email" },
+      value: { en: "info@indoteksaft.co.id", id: "info@indoteksaft.co.id" },
+      href: "mailto:info@indoteksaft.co.id",
+      iconName: "email",
+    },
+    {
+      label: { en: "Location", id: "Lokasi" },
+      value: { en: "Jakarta, Indonesia", id: "Jakarta, Indonesia" },
+      iconName: "location",
+    },
+    {
+      label: { en: "Download Company Profile", id: "Download Company Profile" },
+      value: {
+        en: "Full capabilities overview (PDF)",
+        id: "Ringkasan kapabilitas lengkap (PDF)",
+      },
+      href: "/resources/brosur",
+      iconName: "download",
+    },
+    {
+      label: { en: "Request Assessment", id: "Request Assessment" },
+      value: {
+        en: "Get a comprehensive infrastructure audit",
+        id: "Dapatkan audit infrastruktur komprehensif",
+      },
+      href: "#contact",
+      iconName: "assessment",
+    },
+  ],
+};
+
+export function ContactSection({ content }: ContactSectionProps) {
+  const { locale } = useLanguage();
+  const sectionContent = content ?? fallbackContent;
+
   return (
     <section
       id="contact"
@@ -21,29 +84,25 @@ export function ContactSection() {
         <div className="grid gap-14 border-b border-slate-200 pb-12 lg:grid-cols-[0.78fr_1.22fr]">
           <Reveal>
             <span className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600">
-              Get started
+              {pickLocalized(sectionContent.eyebrow, locale)}
             </span>
             <h2
               id="contact-title"
               className="mt-5 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl"
             >
-              Free Consultation
+              {pickLocalized(sectionContent.title, locale)}
             </h2>
             <p className="mt-5 max-w-md text-base leading-8 text-slate-500 sm:text-lg">
-              Schedule a consultation with our technology architects to discuss
-              your infrastructure needs and digital transformation roadmap.
+              {pickLocalized(sectionContent.description, locale)}
             </p>
 
             <div className="mt-9 space-y-5">
-              <ContactDetail icon={Mail} label="Email" value={company.email} />
-              <ContactDetail icon={MapPin} label="Location" value={company.address} />
-              <CompanyProfileDownloadDialog />
-              <ActionDetail
-                icon={ClipboardCheck}
-                label="Request Assessment"
-                value="Get a comprehensive infrastructure audit"
-                href="#contact"
-              />
+              {sectionContent.details.map((detail) => (
+                <ContactDetail
+                  key={`${detail.iconName}-${pickLocalized(detail.label, locale)}`}
+                  detail={detail}
+                />
+              ))}
             </div>
           </Reveal>
 
@@ -57,32 +116,27 @@ export function ContactSection() {
 }
 
 type ContactDetailProps = {
-  icon: React.ComponentType<{ className?: string; size?: number }>;
-  label: string;
-  value: string;
+  detail: HomeContactDetail;
 };
 
-function ContactDetail({ icon: Icon, label, value }: ContactDetailProps) {
-  return (
-    <div className="flex items-center gap-4">
-      <div className="grid size-11 place-items-center bg-cyan-50 text-blue-600">
-        <Icon aria-hidden="true" size={19} />
-      </div>
-      <div>
-        <span className="block text-sm font-bold text-blue-600">{label}</span>
-        <span className="mt-1 block text-sm text-slate-500">{value}</span>
-      </div>
-    </div>
-  );
-}
+function ContactDetail({ detail }: ContactDetailProps) {
+  const { locale } = useLanguage();
+  const label = pickLocalized(detail.label, locale);
+  const value = pickLocalized(detail.value, locale);
 
-type ActionDetailProps = ContactDetailProps & {
-  href: string;
-};
+  if (detail.iconName === "download") {
+    return (
+      <CompanyProfileDownloadDialog
+        downloadUrl={detail.href}
+        label={label}
+        description={value}
+      />
+    );
+  }
 
-function ActionDetail({ icon: Icon, label, value, href }: ActionDetailProps) {
-  return (
-    <a href={href} className="group flex items-center gap-4">
+  const Icon = iconMap[detail.iconName ?? ""] ?? Mail;
+  const content = (
+    <>
       <div className="grid size-11 place-items-center bg-cyan-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
         <Icon aria-hidden="true" size={19} />
       </div>
@@ -90,6 +144,16 @@ function ActionDetail({ icon: Icon, label, value, href }: ActionDetailProps) {
         <span className="block text-sm font-bold text-blue-600">{label}</span>
         <span className="mt-1 block text-sm text-slate-500">{value}</span>
       </div>
-    </a>
+    </>
   );
+
+  if (detail.href) {
+    return (
+      <a href={detail.href} className="group flex items-center gap-4">
+        {content}
+      </a>
+    );
+  }
+
+  return <div className="group flex items-center gap-4">{content}</div>;
 }

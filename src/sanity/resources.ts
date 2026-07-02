@@ -4,6 +4,7 @@ import { draftMode } from "next/headers";
 
 import type { LocalizedText } from "@/lib/i18n/localized-content";
 import { sanityClient } from "@/sanity/client";
+import { getSanityFetchOptions } from "@/sanity/fetch-options";
 
 export type CmsPortfolioProject = {
   slug: string;
@@ -146,14 +147,22 @@ export async function getPortfolioPageData() {
 
   try {
     const client = await getSanityFetchClient();
+    const fetchOptions = await getSanityFetchOptions([
+      "resources",
+      "resources:portfolio",
+    ]);
     const [banner, projects] = await Promise.all([
-      client.fetch<CmsResourceBanner | null>(portfolioBannerQuery, {}, { cache: "no-store" }),
-      client.fetch<CmsPortfolioProject[]>(portfolioQuery, {}, { cache: "no-store" }),
+      client.fetch<CmsResourceBanner | null>(
+        portfolioBannerQuery,
+        {},
+        fetchOptions,
+      ),
+      client.fetch<CmsPortfolioProject[]>(portfolioQuery, {}, fetchOptions),
     ]);
 
     return {
       banner: banner ?? fallbackBanner,
-      projects: projects.length > 0 ? projects : fallbackPortfolioProjects,
+      projects,
     };
   } catch (error) {
     console.warn("Failed to load portfolio from Sanity.", error);
@@ -176,14 +185,22 @@ export async function getClientPageData() {
 
   try {
     const client = await getSanityFetchClient();
+    const fetchOptions = await getSanityFetchOptions([
+      "resources",
+      "resources:clients",
+    ]);
     const [banner, clients] = await Promise.all([
-      client.fetch<CmsResourceBanner | null>(clientBannerQuery, {}, { cache: "no-store" }),
-      client.fetch<CmsClientLogo[]>(clientsQuery, {}, { cache: "no-store" }),
+      client.fetch<CmsResourceBanner | null>(
+        clientBannerQuery,
+        {},
+        fetchOptions,
+      ),
+      client.fetch<CmsClientLogo[]>(clientsQuery, {}, fetchOptions),
     ]);
 
     return {
       banner: banner ?? fallbackBanner,
-      clients: clients.length > 0 ? clients : fallbackClientLogos,
+      clients,
     };
   } catch (error) {
     console.warn("Failed to load clients from Sanity.", error);

@@ -79,6 +79,12 @@ export const structure: StructureResolver = (S) =>
               documentList(S, "What We Do Cards", "serviceCard"),
               documentList(S, "Product Carousel", "product"),
               documentList(S, "Knowledge Center Articles", "article"),
+              singleton(
+                S,
+                "Contact Section",
+                "homeContactSection",
+                "homeContactSection.home",
+              ),
             ]),
         ),
 
@@ -98,7 +104,6 @@ export const structure: StructureResolver = (S) =>
                 { pageSlug: "products" },
               ),
               documentList(S, "Product List & Detail", "product"),
-              documentList(S, "Documents / Brochures", "documentResource"),
             ]),
         ),
 
@@ -160,6 +165,7 @@ export const structure: StructureResolver = (S) =>
                 { pageSlug: "resources-client" },
               ),
               documentList(S, "Clients / Partner Logos", "client"),
+              documentList(S, "Documents / Brochures", "documentResource"),
               documentList(S, "Blog & Articles", "article"),
               documentList(S, "Article Categories", "articleCategory"),
               documentList(S, "Events", "event"),
@@ -228,6 +234,19 @@ export const structure: StructureResolver = (S) =>
                 "navigationItem",
                 '_type == "navigationItem" && group == $group',
                 { group: "footer_resources" },
+              ),
+              singleton(
+                S,
+                "Contact Page",
+                "contactPage",
+                "contactPage.contact",
+              ),
+              documentList(S, "Legal Pages", "legalPage"),
+              singleton(
+                S,
+                "Careers Page",
+                "careersPage",
+                "careersPage.main",
               ),
               documentList(S, "Site Settings", "siteSetting"),
             ]),

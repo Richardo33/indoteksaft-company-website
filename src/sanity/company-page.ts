@@ -226,9 +226,9 @@ export async function getCompanyPageData(): Promise<CompanyPageData> {
 
     return {
       banner: banner?.image ? banner : fallbackData.banner,
-      statements: statements.length > 0 ? statements : fallbackData.statements,
-      values: values.length > 0 ? values : fallbackData.values,
-      leaders: leaders.length > 0 ? leaders : fallbackData.leaders,
+      statements,
+      values,
+      leaders,
     };
   } catch (error) {
     console.warn("Failed to load company page from Sanity.", error);

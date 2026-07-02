@@ -438,8 +438,10 @@ async function seedIndustries() {
       _id: stableId("industry", row.slug),
       _type: "industry",
       title: row.title,
+      titleI18n: localized(row.title),
       slug: { _type: "slug", current: row.slug },
       description: row.description,
+      descriptionI18n: localized(row.description),
       iconName: row.icon_name,
       image: imageField(image),
       status: row.status,
@@ -655,8 +657,10 @@ async function seedDocumentsAndSettings() {
       _id: stableId("documentResource", row.slug),
       _type: "documentResource",
       title: row.title,
+      titleI18n: localized(row.title),
       slug: { _type: "slug", current: row.slug },
       description: row.description,
+      descriptionI18n: localized(row.description),
       documentType: row.document_type,
       fileUrl: row.file_url,
       status: row.status,
@@ -677,6 +681,7 @@ async function seedDocumentsAndSettings() {
               row.key === "company_profile_download"
                 ? {
                     href: row.value?.href ?? row.value?.fileUrl ?? "/resources/brosur",
+                    downloadFileUrl: row.value?.downloadFileUrl ?? "",
                     label: "Download Company Profile",
                     description: "Full capabilities overview (PDF)",
                     dialogTitle: "Download Company Profile",
@@ -697,6 +702,370 @@ async function seedDocumentsAndSettings() {
   return documents.rows.length + settings.rows.length;
 }
 
+async function seedEvents() {
+  const events = [
+    {
+      slug: "idul-adha-2026",
+      title: "Eid al-Adha Gathering 2026",
+      titleId: "Silaturahmi Idul Adha 2026",
+      description:
+        "A completed Eid al-Adha gathering and relationship-building moment with the Indoteksaft community.",
+      descriptionId:
+        "Kegiatan silaturahmi Idul Adha bersama komunitas Indoteksaft yang telah selesai dilaksanakan.",
+      eventDate: "2026-05-27T02:00:00.000Z",
+      location: "Bandung, Indonesia",
+      locationId: "Bandung, Indonesia",
+      registrationUrl: null,
+      status: "published",
+      sortOrder: 1,
+    },
+    {
+      slug: "peringatan-hut-ri-17-agustus-2026",
+      title: "Independence Day Gathering 2026",
+      titleId: "Acara 17 Agustusan 2026",
+      description:
+        "Upcoming Independence Day gathering to celebrate collaboration, unity, and Indonesia's spirit of progress.",
+      descriptionId:
+        "Kegiatan 17 Agustusan mendatang untuk merayakan kolaborasi, kebersamaan, dan semangat kemajuan Indonesia.",
+      eventDate: "2026-08-17T02:00:00.000Z",
+      location: "Bandung, Indonesia",
+      locationId: "Bandung, Indonesia",
+      registrationUrl: null,
+      status: "published",
+      sortOrder: 2,
+    },
+  ];
+
+  for (const event of events) {
+    await createOrReplace({
+      _id: stableId("event", event.slug),
+      _type: "event",
+      title: event.title,
+      titleI18n: localized(event.title, event.titleId),
+      slug: { _type: "slug", current: event.slug },
+      description: event.description,
+      descriptionI18n: localized(event.description, event.descriptionId),
+      eventDate: event.eventDate,
+      location: event.location,
+      locationI18n: localized(event.location, event.locationId),
+      registrationUrl: event.registrationUrl,
+      status: event.status,
+      sortOrder: event.sortOrder,
+    });
+  }
+
+  return events.length;
+}
+
+async function seedContactPage() {
+  await createOrReplace({
+    _id: "contactPage.contact",
+    _type: "contactPage",
+    eyebrow: "Contact us",
+    eyebrowI18n: localized("Contact us", "Hubungi kami"),
+    title: "Ready to Transform Your Business?",
+    titleI18n: localized(
+      "Ready to Transform Your Business?",
+      "Siap Mentransformasi Bisnis Anda?",
+    ),
+    description:
+      "Share your requirements through the form, and our specialists will help you identify the best technology solutions.",
+    descriptionI18n: localized(
+      "Share your requirements through the form, and our specialists will help you identify the best technology solutions.",
+      "Ceritakan kebutuhan Anda melalui formulir, dan spesialis kami akan membantu menemukan solusi teknologi terbaik.",
+    ),
+    actions: [
+      {
+        _key: "download-company-profile",
+        _type: "object",
+        label: "Download Company Profile",
+        labelI18n: localized("Download Company Profile", "Download Company Profile"),
+        value: "Full capabilities overview (PDF)",
+        valueI18n: localized(
+          "Full capabilities overview (PDF)",
+          "Ringkasan kapabilitas lengkap (PDF)",
+        ),
+        href: "/resources/brosur",
+        iconName: "download",
+      },
+      {
+        _key: "whatsapp-only",
+        _type: "object",
+        label: "Whatsapp Only",
+        labelI18n: localized("Whatsapp Only", "WhatsApp Only"),
+        value: "Chat directly with our sales team",
+        valueI18n: localized(
+          "Chat directly with our sales team",
+          "Chat langsung dengan tim sales kami",
+        ),
+        href: "https://wa.me/622258999225",
+        iconName: "whatsapp",
+      },
+      {
+        _key: "email-us",
+        _type: "object",
+        label: "Email Us",
+        labelI18n: localized("Email Us", "Email Kami"),
+        value: "info@indoteksaft.co.id",
+        valueI18n: localized("info@indoteksaft.co.id"),
+        href: "mailto:info@indoteksaft.co.id",
+        iconName: "email",
+      },
+      {
+        _key: "call-us",
+        _type: "object",
+        label: "Call Us",
+        labelI18n: localized("Call Us", "Hubungi Kami"),
+        value: "(022) 58999225",
+        valueI18n: localized("(022) 58999225"),
+        href: "tel:+622258999225",
+        iconName: "phone",
+      },
+    ],
+    locationLabel: "Office Location",
+    locationLabelI18n: localized("Office Location", "Lokasi Kantor"),
+    officeAddress:
+      "Jl. Raya Gading Tutuka No.103, Parungserab, Kec. Soreang, Kabupaten Bandung, Jawa Barat 40921",
+    officeAddressI18n: localized(
+      "Jl. Raya Gading Tutuka No.103, Parungserab, Kec. Soreang, Kabupaten Bandung, Jawa Barat 40921",
+    ),
+    mapEmbedUrl:
+      "https://maps.google.com/maps?q=PT%20Indotek%20Buana%20Karya%20Jl.%20Raya%20Gading%20Tutuka%20No.103%20Soreang%20Bandung&t=&z=16&ie=UTF8&iwloc=&output=embed",
+    status: "published",
+    seoTitle: "Contact Sales",
+    seoDescription:
+      "Hubungi tim Indoteksaft untuk konsultasi teknologi, company profile, assessment, dan kebutuhan transformasi digital.",
+  });
+
+  return 1;
+}
+
+async function seedHomeContactSection() {
+  await createOrReplace({
+    _id: "homeContactSection.home",
+    _type: "homeContactSection",
+    eyebrow: "Get started",
+    eyebrowI18n: localized("Get started", "Mulai"),
+    title: "Free Consultation",
+    titleI18n: localized("Free Consultation", "Konsultasi Gratis"),
+    description:
+      "Schedule a consultation with our technology architects to discuss your infrastructure needs and digital transformation roadmap.",
+    descriptionI18n: localized(
+      "Schedule a consultation with our technology architects to discuss your infrastructure needs and digital transformation roadmap.",
+      "Jadwalkan konsultasi dengan arsitek teknologi kami untuk membahas kebutuhan infrastruktur dan roadmap transformasi digital Anda.",
+    ),
+    details: [
+      {
+        _key: "home-contact-email",
+        _type: "object",
+        label: "Email",
+        labelI18n: localized("Email", "Email"),
+        value: "info@indoteksaft.co.id",
+        valueI18n: localized("info@indoteksaft.co.id"),
+        href: "mailto:info@indoteksaft.co.id",
+        iconName: "email",
+      },
+      {
+        _key: "home-contact-location",
+        _type: "object",
+        label: "Location",
+        labelI18n: localized("Location", "Lokasi"),
+        value: "Jakarta, Indonesia",
+        valueI18n: localized("Jakarta, Indonesia"),
+        iconName: "location",
+      },
+      {
+        _key: "home-contact-download-profile",
+        _type: "object",
+        label: "Download Company Profile",
+        labelI18n: localized("Download Company Profile", "Download Company Profile"),
+        value: "Full capabilities overview (PDF)",
+        valueI18n: localized(
+          "Full capabilities overview (PDF)",
+          "Ringkasan kapabilitas lengkap (PDF)",
+        ),
+        href: "/resources/brosur",
+        iconName: "download",
+      },
+      {
+        _key: "home-contact-request-assessment",
+        _type: "object",
+        label: "Request Assessment",
+        labelI18n: localized("Request Assessment", "Request Assessment"),
+        value: "Get a comprehensive infrastructure audit",
+        valueI18n: localized(
+          "Get a comprehensive infrastructure audit",
+          "Dapatkan audit infrastruktur komprehensif",
+        ),
+        href: "#contact",
+        iconName: "assessment",
+      },
+    ],
+    status: "published",
+  });
+
+  return 1;
+}
+
+async function seedSimplePages() {
+  const legalPages = [
+    {
+      _id: "legalPage.privacy-policy",
+      pageKey: "privacy-policy",
+      eyebrow: "Privacy",
+      eyebrowId: "Privasi",
+      title: "Privacy Policy",
+      titleId: "Kebijakan Privasi",
+      description:
+        "How we handle information submitted through our website and contact forms.",
+      descriptionId:
+        "Bagaimana kami mengelola informasi yang dikirim melalui website dan form kontak.",
+      sections: [
+        {
+          body: [
+            "PT Indotek Buana Karya menghargai privasi pengunjung dan menjaga informasi yang dikirimkan melalui website ini untuk kebutuhan komunikasi bisnis yang relevan.",
+          ],
+        },
+        {
+          heading: "Information We Collect",
+          headingId: "Informasi yang Kami Kumpulkan",
+          body: [
+            "Kami dapat menerima nama, email, nomor telepon, perusahaan, posisi, industri, serta kebutuhan proyek yang dikirim melalui form kontak.",
+          ],
+        },
+        {
+          heading: "How We Use Information",
+          headingId: "Bagaimana Informasi Digunakan",
+          body: [
+            "Informasi digunakan untuk menanggapi inquiry, menyusun rekomendasi solusi, dan melakukan komunikasi lanjutan terkait kebutuhan bisnis.",
+          ],
+        },
+        {
+          heading: "Contact",
+          headingId: "Kontak",
+          body: ["Pertanyaan privasi dapat dikirimkan ke info@indoteksaft.co.id."],
+        },
+      ],
+      seoTitle: "Privacy Policy",
+      seoDescription:
+        "Privacy policy for personal data submitted through Indoteksaft website.",
+    },
+    {
+      _id: "legalPage.terms-and-conditions",
+      pageKey: "terms-and-conditions",
+      eyebrow: "Legal",
+      eyebrowId: "Legal",
+      title: "Terms & Conditions",
+      titleId: "Syarat & Ketentuan",
+      description:
+        "General terms for accessing information and submitting inquiries through Indoteksaft.",
+      descriptionId:
+        "Ketentuan umum untuk mengakses informasi dan mengirim inquiry melalui Indoteksaft.",
+      sections: [
+        {
+          body: [
+            "Konten pada website ini disediakan sebagai informasi umum mengenai profil, layanan, produk, dan aktivitas PT Indotek Buana Karya.",
+          ],
+        },
+        {
+          heading: "Use of Website",
+          headingId: "Penggunaan Website",
+          body: [
+            "Pengunjung setuju untuk menggunakan website ini secara bertanggung jawab dan tidak melakukan aktivitas yang dapat mengganggu keamanan, performa, atau integritas sistem.",
+          ],
+        },
+        {
+          heading: "Service Information",
+          headingId: "Informasi Layanan",
+          body: [
+            "Informasi produk dan layanan dapat berubah sewaktu-waktu mengikuti kebutuhan bisnis, teknis, dan kesepakatan dengan klien.",
+          ],
+        },
+        {
+          heading: "Contact",
+          headingId: "Kontak",
+          body: [
+            "Untuk pertanyaan lebih lanjut terkait ketentuan penggunaan, hubungi kami melalui info@indoteksaft.co.id.",
+          ],
+        },
+      ],
+      seoTitle: "Terms & Conditions",
+      seoDescription:
+        "Terms and conditions for using Indoteksaft website and services.",
+    },
+  ];
+
+  for (const page of legalPages) {
+    await createOrReplace({
+      _id: page._id,
+      _type: "legalPage",
+      pageKey: page.pageKey,
+      eyebrow: page.eyebrow,
+      eyebrowI18n: localized(page.eyebrow, page.eyebrowId),
+      title: page.title,
+      titleI18n: localized(page.title, page.titleId),
+      description: page.description,
+      descriptionI18n: localized(page.description, page.descriptionId),
+      sections: page.sections.map((section, index) => ({
+        _key: `${page.pageKey}-section-${index}`,
+        _type: "object",
+        heading: section.heading,
+        headingI18n: localized(section.heading, section.headingId),
+        body: section.body,
+        bodyI18n: localizedArray(section.body),
+      })),
+      status: "published",
+      seoTitle: page.seoTitle,
+      seoDescription: page.seoDescription,
+    });
+  }
+
+  await createOrReplace({
+    _id: "careersPage.main",
+    _type: "careersPage",
+    eyebrow: "Careers",
+    eyebrowI18n: localized("Careers", "Karier"),
+    title: "Build Meaningful Technology with Indoteksaft",
+    titleI18n: localized(
+      "Build Meaningful Technology with Indoteksaft",
+      "Bangun Teknologi Bermakna Bersama Indoteksaft",
+    ),
+    description:
+      "We are preparing a dedicated careers page for future roles, culture, and hiring information.",
+    descriptionI18n: localized(
+      "We are preparing a dedicated careers page for future roles, culture, and hiring information.",
+      "Kami sedang menyiapkan halaman karier khusus untuk informasi peran, budaya kerja, dan rekrutmen.",
+    ),
+    sectionTitle: "Future Opportunities",
+    sectionTitleI18n: localized("Future Opportunities", "Peluang Mendatang"),
+    sectionDescription:
+      "Our careers page is currently being prepared. For now, candidates or talent partners can contact our team through the official email or contact sales page.",
+    sectionDescriptionI18n: localized(
+      "Our careers page is currently being prepared. For now, candidates or talent partners can contact our team through the official email or contact sales page.",
+      "Halaman karier sedang disiapkan. Untuk sementara, kandidat atau partner talent dapat menghubungi tim kami melalui email resmi atau halaman contact sales.",
+    ),
+    departments: ["Engineering", "Infrastructure", "Project Delivery", "Operations"].map(
+      (team) => ({
+        _key: `career-${slugify(team)}`,
+        _type: "object",
+        title: team,
+        titleI18n: localized(team),
+        description: "Role information will be available soon.",
+        descriptionI18n: localized(
+          "Role information will be available soon.",
+          "Informasi posisi akan tersedia segera.",
+        ),
+      }),
+    ),
+    status: "published",
+    seoTitle: "Careers",
+    seoDescription:
+      "Explore career opportunities and future openings at Indoteksaft.",
+  });
+
+  return legalPages.length + 1;
+}
+
 async function main() {
   const steps = [
     ["pages", seedPages],
@@ -714,6 +1083,10 @@ async function main() {
     ["company", seedCompany],
     ["navigation", seedNavigation],
     ["documentsAndSettings", seedDocumentsAndSettings],
+    ["events", seedEvents],
+    ["contactPage", seedContactPage],
+    ["homeContactSection", seedHomeContactSection],
+    ["simplePages", seedSimplePages],
   ];
 
   const summary = {};

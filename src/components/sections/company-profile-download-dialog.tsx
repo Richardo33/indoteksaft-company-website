@@ -46,6 +46,7 @@ type DownloadInput = z.input<typeof downloadSchema>;
 
 type CompanyProfileDownloadDialogProps = {
   downloadUrl?: string;
+  downloadFileUrl?: string;
   label?: string;
   description?: string;
   dialogTitle?: string;
@@ -56,6 +57,7 @@ type CompanyProfileDownloadDialogProps = {
 
 export function CompanyProfileDownloadDialog({
   downloadUrl = "/resources/brosur",
+  downloadFileUrl,
   label = "Download Company Profile",
   description = "Full capabilities overview (PDF)",
   dialogTitle = "Download Company Profile",
@@ -67,6 +69,7 @@ export function CompanyProfileDownloadDialog({
   const [result, setResult] = useState<ContactApiResponse | null>(null);
   const [setting, setSetting] = useState({
     downloadUrl,
+    downloadFileUrl,
     label,
     description,
     dialogTitle,
@@ -105,6 +108,8 @@ export function CompanyProfileDownloadDialog({
 
         const data = (await response.json()) as Partial<typeof setting> & {
           href?: string;
+          fileUrl?: string;
+          downloadFileUrl?: string;
         };
 
         if (!active) return;
@@ -113,6 +118,8 @@ export function CompanyProfileDownloadDialog({
           ...current,
           ...data,
           downloadUrl: data.href ?? data.downloadUrl ?? current.downloadUrl,
+          downloadFileUrl:
+            data.downloadFileUrl ?? data.fileUrl ?? current.downloadFileUrl,
         }));
       } catch {
         // Fallback props stay active when CMS settings are unavailable.
@@ -145,9 +152,20 @@ export function CompanyProfileDownloadDialog({
 
       if (response.ok) {
         reset();
+        if (setting.downloadFileUrl) {
+          const link = document.createElement("a");
+          link.href = setting.downloadFileUrl;
+          link.download = "";
+          link.rel = "noreferrer";
+          link.target = "_blank";
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        }
+
         window.setTimeout(() => {
           window.location.href = setting.downloadUrl;
-        }, 700);
+        }, setting.downloadFileUrl ? 900 : 700);
       }
     } catch {
       setResult({

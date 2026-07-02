@@ -8,6 +8,7 @@ import { industryCards } from "@/config/industries";
 import { productCatalog, type ProductTheme } from "@/config/products";
 import type { LocalizedText } from "@/lib/i18n/localized-content";
 import { sanityClient } from "@/sanity/client";
+import { getSanityFetchOptions } from "@/sanity/fetch-options";
 
 export type HomeHeroContent = {
   eyebrow: LocalizedText;
@@ -58,6 +59,20 @@ export type HomeArticleCard = {
   title: LocalizedText;
   date: string;
   image: string;
+};
+
+export type HomeContactDetail = {
+  label: LocalizedText;
+  value: LocalizedText;
+  href?: string;
+  iconName?: string;
+};
+
+export type HomeContactSectionContent = {
+  eyebrow: LocalizedText;
+  title: LocalizedText;
+  description: LocalizedText;
+  details: HomeContactDetail[];
 };
 
 const fallbackHero: HomeHeroContent = {
@@ -130,6 +145,46 @@ const fallbackServiceCards: HomeServiceCard[] = [
     ],
   },
 ];
+
+const fallbackContactSection: HomeContactSectionContent = {
+  eyebrow: { en: "Get started", id: "Mulai" },
+  title: { en: "Free Consultation", id: "Konsultasi Gratis" },
+  description: {
+    en: "Schedule a consultation with our technology architects to discuss your infrastructure needs and digital transformation roadmap.",
+    id: "Jadwalkan konsultasi dengan arsitek teknologi kami untuk membahas kebutuhan infrastruktur dan roadmap transformasi digital Anda.",
+  },
+  details: [
+    {
+      label: { en: "Email", id: "Email" },
+      value: { en: company.email, id: company.email },
+      href: `mailto:${company.email}`,
+      iconName: "email",
+    },
+    {
+      label: { en: "Location", id: "Lokasi" },
+      value: { en: company.address, id: company.address },
+      iconName: "location",
+    },
+    {
+      label: { en: "Download Company Profile", id: "Download Company Profile" },
+      value: {
+        en: "Full capabilities overview (PDF)",
+        id: "Ringkasan kapabilitas lengkap (PDF)",
+      },
+      href: "/resources/brosur",
+      iconName: "download",
+    },
+    {
+      label: { en: "Request Assessment", id: "Request Assessment" },
+      value: {
+        en: "Get a comprehensive infrastructure audit",
+        id: "Dapatkan audit infrastruktur komprehensif",
+      },
+      href: "#contact",
+      iconName: "assessment",
+    },
+  ],
+};
 
 function fallbackIndustries(): HomeIndustrySummary[] {
   return industryCards.map((industry) => ({
@@ -313,6 +368,37 @@ const homeArticlesQuery = `*[
   "image": coverImage.asset->url
 }`;
 
+const homeContactSectionQuery = `*[
+  _type == "homeContactSection" &&
+  _id == "homeContactSection.home" &&
+  status == "published"
+][0] {
+  "eyebrow": {
+    "en": coalesce(eyebrowI18n.en, eyebrow),
+    "id": coalesce(eyebrowI18n.id, eyebrowI18n.en, eyebrow)
+  },
+  "title": {
+    "en": coalesce(titleI18n.en, title),
+    "id": coalesce(titleI18n.id, titleI18n.en, title)
+  },
+  "description": {
+    "en": coalesce(descriptionI18n.en, description),
+    "id": coalesce(descriptionI18n.id, descriptionI18n.en, description)
+  },
+  "details": coalesce(details, [])[] {
+    "label": {
+      "en": coalesce(labelI18n.en, label),
+      "id": coalesce(labelI18n.id, labelI18n.en, label)
+    },
+    "value": {
+      "en": coalesce(valueI18n.en, value),
+      "id": coalesce(valueI18n.id, valueI18n.en, value)
+    },
+    href,
+    iconName
+  }
+}`;
+
 export async function getHomeHero(): Promise<HomeHeroContent> {
   try {
     const client = await getSanityFetchClient();
@@ -329,7 +415,7 @@ export async function getHomeHero(): Promise<HomeHeroContent> {
         secondaryCtaHref?: string;
       };
       rotatingWords?: LocalizedText[];
-    }>(homeHeroQuery, {}, { cache: "no-store" });
+    }>(homeHeroQuery, {}, await getSanityFetchOptions(["home", "home:hero"]));
 
     if (result.banner) {
       return {
@@ -364,12 +450,10 @@ export async function getHomeMetrics(): Promise<HomeMetric[]> {
     const metrics = await client.fetch<HomeMetric[]>(
       homeMetricsQuery,
       {},
-      { cache: "no-store" },
+      await getSanityFetchOptions(["home", "home:metrics"]),
     );
 
-    if (metrics.length > 0) {
-      return metrics;
-    }
+    return metrics;
   } catch (error) {
     console.warn("Failed to load home metrics from Sanity, using fallback.", error);
   }
@@ -383,12 +467,10 @@ export async function getHomeIndustries(): Promise<HomeIndustrySummary[]> {
     const industries = await client.fetch<HomeIndustrySummary[]>(
       homeIndustriesQuery,
       {},
-      { cache: "no-store" },
+      await getSanityFetchOptions(["home", "home:industries"]),
     );
 
-    if (industries.length > 0) {
-      return industries;
-    }
+    return industries;
   } catch (error) {
     console.warn(
       "Failed to load home industries from Sanity, using fallback.",
@@ -405,12 +487,10 @@ export async function getHomeServiceCards(): Promise<HomeServiceCard[]> {
     const cards = await client.fetch<HomeServiceCard[]>(
       homeServiceCardsQuery,
       {},
-      { cache: "no-store" },
+      await getSanityFetchOptions(["home", "home:service-cards"]),
     );
 
-    if (cards.length > 0) {
-      return cards;
-    }
+    return cards;
   } catch (error) {
     console.warn(
       "Failed to load home service cards from Sanity, using fallback.",
@@ -427,16 +507,14 @@ export async function getHomeProductPages(): Promise<HomeProductCarouselItem[][]
     const products = await client.fetch<HomeProductCarouselItem[]>(
       homeProductCarouselQuery,
       {},
-      { cache: "no-store" },
+      await getSanityFetchOptions(["home", "home:products"]),
     );
 
     const validProducts = products.filter(
       (product) => product.slug && product.name && product.theme,
     );
 
-    if (validProducts.length > 0) {
-      return chunk(validProducts, 4);
-    }
+    return chunk(validProducts, 4);
   } catch (error) {
     console.warn(
       "Failed to load home product carousel from Sanity, using fallback.",
@@ -455,7 +533,11 @@ export async function getHomeArticlePages(): Promise<HomeArticleCard[][]> {
         date?: string;
         image?: string;
       })[]
-    >(homeArticlesQuery, {}, { cache: "no-store" });
+    >(
+      homeArticlesQuery,
+      {},
+      await getSanityFetchOptions(["home", "home:articles"]),
+    );
 
     const validArticles = articles
       .filter((article) => article.slug && article.title)
@@ -472,9 +554,7 @@ export async function getHomeArticlePages(): Promise<HomeArticleCard[][]> {
           "/images/industry-enterprise.png",
       }));
 
-    if (validArticles.length > 0) {
-      return chunk(validArticles, 3);
-    }
+    return chunk(validArticles, 3);
   } catch (error) {
     console.warn(
       "Failed to load home articles from Sanity, using fallback.",
@@ -483,4 +563,33 @@ export async function getHomeArticlePages(): Promise<HomeArticleCard[][]> {
   }
 
   return fallbackArticlePages();
+}
+
+export async function getHomeContactSection(): Promise<HomeContactSectionContent> {
+  try {
+    const client = await getSanityFetchClient();
+    const content = await client.fetch<HomeContactSectionContent | null>(
+      homeContactSectionQuery,
+      {},
+      await getSanityFetchOptions(["home", "home:contact"]),
+    );
+
+    if (content) {
+      return {
+        ...fallbackContactSection,
+        ...content,
+        details:
+          content.details && content.details.length > 0
+            ? content.details
+            : fallbackContactSection.details,
+      };
+    }
+  } catch (error) {
+    console.warn(
+      "Failed to load home contact section from Sanity, using fallback.",
+      error,
+    );
+  }
+
+  return fallbackContactSection;
 }

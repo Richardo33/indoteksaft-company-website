@@ -175,6 +175,17 @@ export const enToId = {
   "Our Clients": "Klien Kami",
   "Client Experience": "Pengalaman Klien",
   "Upcoming events, webinars, and technology sessions by Indoteksaft.": "Event, webinar, dan sesi teknologi terbaru dari Indoteksaft.",
+  "Brochures & Company Materials": "Brosur & Materi Perusahaan",
+  "Access company materials and solution overview documents.": "Akses materi perusahaan dan dokumen overview solusi.",
+  "Open Document": "Buka Dokumen",
+  "No published events yet.": "Belum ada event yang dipublikasikan.",
+  "Discover upcoming events, webinars, and technology sessions from Indoteksaft.": "Temukan event, webinar, dan sesi teknologi terbaru dari Indoteksaft.",
+  "Upcoming Events": "Event Mendatang",
+  "Completed Events": "Event Selesai",
+  "Register": "Daftar",
+  "Learn More": "Pelajari Lebih Lanjut",
+  "Coming Soon": "Segera Hadir",
+  Cancel: "Batal",
 
   // Company page
   "About Indoteksaft": "Tentang Indoteksaft",
@@ -200,6 +211,29 @@ export const enToId = {
   "Meet the leaders driving innovation, digital transformation, and technological excellence at Indoteksaft.": "Kenali para pemimpin yang mendorong inovasi, transformasi digital, dan keunggulan teknologi di Indoteksaft.",
   "CEO & Co-Founder": "CEO & Co-Founder",
   "Director & Co-Founder": "Direktur & Co-Founder",
+
+  // Legal pages
+  Privacy: "Privasi",
+  Legal: "Legal",
+  "How we handle information submitted through our website and contact forms.": "Bagaimana kami mengelola informasi yang dikirim melalui website dan form kontak.",
+  "Information We Collect": "Informasi yang Kami Kumpulkan",
+  "How We Use Information": "Bagaimana Informasi Digunakan",
+  "Use of Website": "Penggunaan Website",
+  "Service Information": "Informasi Layanan",
+  "General terms for accessing information and submitting inquiries through Indoteksaft.": "Ketentuan umum untuk mengakses informasi dan mengirim inquiry melalui Indoteksaft.",
+  "Privacy policy for personal data submitted through Indoteksaft website.": "Kebijakan privasi untuk data pribadi yang dikirim melalui website Indoteksaft.",
+  "Terms and conditions for using Indoteksaft website and services.": "Syarat dan ketentuan penggunaan website dan layanan Indoteksaft.",
+
+  // Form/system states
+  "Memuat formulir kontak": "Loading contact form",
+  "Koneksi gagal. Silakan coba kembali beberapa saat lagi.": "Connection failed. Please try again in a few moments.",
+  "Layanan sedang mengalami gangguan. Silakan coba kembali.": "The service is currently experiencing an issue. Please try again.",
+  "Nama minimal 2 karakter.": "Name must be at least 2 characters.",
+  "Nama perusahaan minimal 2 karakter.": "Company name must be at least 2 characters.",
+  "Masukkan email yang valid.": "Please enter a valid email.",
+  "Jabatan wajib diisi.": "Position is required.",
+  "Nomor telepon wajib diisi.": "Phone number is required.",
+  "Format nomor telepon tidak valid.": "Invalid phone number format.",
 } as const;
 
 export const idToEn = Object.fromEntries(

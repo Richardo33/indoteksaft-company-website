@@ -6,6 +6,7 @@ import { sanityClient } from "@/sanity/client";
 
 export type CompanyProfileDownloadSetting = {
   href: string;
+  downloadFileUrl?: string;
   label: string;
   description: string;
   dialogTitle: string;
@@ -16,6 +17,7 @@ export type CompanyProfileDownloadSetting = {
 
 const fallbackCompanyProfileDownloadSetting: CompanyProfileDownloadSetting = {
   href: "/resources/brosur",
+  downloadFileUrl: undefined,
   label: "Download Company Profile",
   description: "Full capabilities overview (PDF)",
   dialogTitle: "Download Company Profile",
@@ -55,27 +57,54 @@ function parseSettingValue(value: string | null | undefined) {
   }
 }
 
+function normalizeDownloadFileUrl(value: string | undefined) {
+  if (!value) return undefined;
+  if (value === fallbackCompanyProfileDownloadSetting.href) return undefined;
+  return value;
+}
+
 export async function getCompanyProfileDownloadSetting(): Promise<CompanyProfileDownloadSetting> {
   try {
     const client = await getSanityFetchClient();
     const draft = await draftMode();
-    const row = await client.fetch<{ value?: string } | null>(
-      `*[_type == "siteSetting" && key == "company_profile_download"][0]{ value }`,
+    const row = await client.fetch<{
+      setting?: { value?: string } | null;
+      document?: { fileUrl?: string; fileAssetUrl?: string } | null;
+    }>(
+      `{
+        "setting": *[_type == "siteSetting" && key == "company_profile_download"][0]{ value },
+        "document": *[
+          _type == "documentResource" &&
+          status == "published" &&
+          (documentType == "company_profile" || slug.current == "company-profile")
+        ] | order(sortOrder asc)[0] {
+          fileUrl,
+          "fileAssetUrl": file.asset->url
+        }
+      }`,
       {},
       draft.isEnabled
         ? { cache: "no-store" }
         : { next: { revalidate: 60, tags: ["site-setting:company_profile_download"] } },
     );
 
-    const parsed = parseSettingValue(row?.value);
+    const parsed = parseSettingValue(row.setting?.value);
+    const documentDownloadUrl = row.document?.fileAssetUrl || row.document?.fileUrl;
+    const parsedDownloadUrl = normalizeDownloadFileUrl(
+      parsed.downloadFileUrl || parsed.fileUrl,
+    );
+    const cmsDocumentDownloadUrl = normalizeDownloadFileUrl(documentDownloadUrl);
 
     return {
       ...fallbackCompanyProfileDownloadSetting,
       ...parsed,
+      downloadFileUrl:
+        parsedDownloadUrl ||
+        cmsDocumentDownloadUrl ||
+        fallbackCompanyProfileDownloadSetting.downloadFileUrl,
       href:
         parsed.href ||
         parsed.downloadUrl ||
-        parsed.fileUrl ||
         fallbackCompanyProfileDownloadSetting.href,
     };
   } catch (error) {

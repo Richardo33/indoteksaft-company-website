@@ -1,11 +1,15 @@
 import type { MetadataRoute } from "next";
 
-import { articles } from "@/config/articles";
-import { productCatalog } from "@/config/products";
 import { env } from "@/lib/server/env";
+import { getArticleSlugs } from "@/sanity/articles";
+import { getProductSlugs } from "@/sanity/products";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
+  const [productSlugs, articleSlugs] = await Promise.all([
+    getProductSlugs(),
+    getArticleSlugs(),
+  ]);
 
   return [
     {
@@ -62,8 +66,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.35,
     },
-    ...productCatalog.map((product) => ({
-      url: `${env.SITE_URL}/products/${product.slug}`,
+    ...productSlugs.map((slug) => ({
+      url: `${env.SITE_URL}/products/${slug}`,
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.7,
@@ -104,8 +108,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
-    ...articles.map((article) => ({
-      url: `${env.SITE_URL}/articles/${article.slug}`,
+    ...articleSlugs.map((slug) => ({
+      url: `${env.SITE_URL}/articles/${slug}`,
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.65,

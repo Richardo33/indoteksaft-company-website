@@ -33,9 +33,6 @@ export function SolutionsTabs({ solutions }: SolutionsTabsProps) {
   const [activeId, setActiveId] = useState<SolutionTabId>("infrastructure");
   const activeSolution =
     solutions.find((solution) => solution.id === activeId) ?? solutions[0];
-  const HeroIcon = tabIcons[activeSolution.id];
-  const activeTitle = pickLocalized(activeSolution.title, locale);
-  const activeDescription = pickLocalized(activeSolution.description, locale);
 
   useEffect(() => {
     const syncTabFromHash = () => {
@@ -57,6 +54,20 @@ export function SolutionsTabs({ solutions }: SolutionsTabsProps) {
     setActiveId(id);
     window.history.replaceState(null, "", `#${id}`);
   };
+
+  if (!activeSolution) {
+    return (
+      <div className="mt-12 border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
+        {locale === "id"
+          ? "Belum ada solusi yang dipublikasikan."
+          : "No published solutions yet."}
+      </div>
+    );
+  }
+
+  const HeroIcon = tabIcons[activeSolution.id];
+  const activeTitle = pickLocalized(activeSolution.title, locale);
+  const activeDescription = pickLocalized(activeSolution.description, locale);
 
   return (
     <div className="mt-12">

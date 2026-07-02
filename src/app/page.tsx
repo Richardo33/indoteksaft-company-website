@@ -8,6 +8,7 @@ import { MetricsSection } from "@/components/sections/metrics-section";
 import { ProductsSection } from "@/components/sections/products-section";
 import { Reveal } from "@/components/shared/reveal";
 import {
+  getHomeContactSection,
   getHomeArticlePages,
   getHomeHero,
   getHomeProductPages,
@@ -16,10 +17,11 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [hero, productPages, articlePagesData] = await Promise.all([
+  const [hero, productPages, articlePagesData, contactSection] = await Promise.all([
     getHomeHero(),
     getHomeProductPages(),
     getHomeArticlePages(),
+    getHomeContactSection(),
   ]);
 
   return (
@@ -44,7 +46,7 @@ export default async function HomePage() {
         <IndustriesSection />
       </Reveal>
       <Reveal>
-        <ContactSection />
+        <ContactSection content={contactSection} />
       </Reveal>
     </main>
   );
