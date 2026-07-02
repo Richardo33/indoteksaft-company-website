@@ -43,6 +43,10 @@ const sanity = createClient({
   useCdn: false,
 });
 
+const shouldOverwriteExistingDocuments =
+  process.argv.includes("--overwrite") ||
+  process.env.SANITY_SEED_OVERWRITE === "true";
+
 const pool = new Pool({
   host: process.env.DB_HOST ?? "localhost",
   port: Number(process.env.DB_PORT ?? 5432),
@@ -147,10 +151,22 @@ async function uploadAssetById(id) {
   return uploadAsset(media);
 }
 
+function sanitizeDocument(document) {
+  return JSON.parse(JSON.stringify(document, (_, value) => clean(value)));
+}
+
+async function createSeedDocument(document) {
+  const sanitizedDocument = sanitizeDocument(document);
+
+  if (shouldOverwriteExistingDocuments) {
+    return sanity.createOrReplace(sanitizedDocument);
+  }
+
+  return sanity.createIfNotExists(sanitizedDocument);
+}
+
 async function createOrReplace(document) {
-  return sanity.createOrReplace(
-    JSON.parse(JSON.stringify(document, (_, value) => clean(value))),
-  );
+  return createSeedDocument(document);
 }
 
 async function seedPages() {
@@ -1067,6 +1083,12 @@ async function seedSimplePages() {
 }
 
 async function main() {
+  console.log(
+    shouldOverwriteExistingDocuments
+      ? "Sanity seed mode: OVERWRITE existing CMS documents."
+      : "Sanity seed mode: SAFE, existing CMS documents will not be overwritten.",
+  );
+
   const steps = [
     ["pages", seedPages],
     ["banners", seedBanners],

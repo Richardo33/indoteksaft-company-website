@@ -79,6 +79,26 @@ const localizedStringArrayField = (name: string, title: string) =>
     ],
   });
 
+const backgroundBannerPages = ["home", "company"];
+const splitImageBannerPages = ["products", "industries"];
+
+function getBannerPageSlug(document: unknown) {
+  if (!document || typeof document !== "object") {
+    return "";
+  }
+
+  const pageSlug = (document as { pageSlug?: unknown }).pageSlug;
+  return typeof pageSlug === "string" ? pageSlug : "";
+}
+
+function shouldUseBannerBackgroundImage(document: unknown) {
+  return backgroundBannerPages.includes(getBannerPageSlug(document));
+}
+
+function shouldUseBannerImage(document: unknown) {
+  return splitImageBannerPages.includes(getBannerPageSlug(document));
+}
+
 export const schemaTypes = [
   defineType({
     name: "sitePage",
@@ -113,8 +133,24 @@ export const schemaTypes = [
       localizedStringField("subtitleI18n", "Subtitle Bilingual"),
       defineField({ name: "description", title: "Description", type: "text", rows: 4 }),
       localizedTextField("descriptionI18n", "Description Bilingual", 4),
-      defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
-      defineField({ name: "backgroundImage", title: "Background Image", type: "image", options: { hotspot: true } }),
+      defineField({
+        name: "image",
+        title: "Banner Side Image",
+        description:
+          "Dipakai untuk banner split layout seperti Products dan Industries. Tidak dipakai untuk Home/Company hero.",
+        type: "image",
+        options: { hotspot: true },
+        hidden: ({ document }) => !shouldUseBannerImage(document),
+      }),
+      defineField({
+        name: "backgroundImage",
+        title: "Hero Background Image",
+        description:
+          "Dipakai untuk banner full-background seperti Home dan Company. Tidak dipakai untuk Products/Industries split banner.",
+        type: "image",
+        options: { hotspot: true },
+        hidden: ({ document }) => !shouldUseBannerBackgroundImage(document),
+      }),
       defineField({ name: "ctaLabel", title: "CTA Label", type: "string" }),
       localizedStringField("ctaLabelI18n", "CTA Label Bilingual"),
       defineField({ name: "ctaHref", title: "CTA URL", type: "string" }),
@@ -127,7 +163,19 @@ export const schemaTypes = [
       sortOrderField,
     ],
     preview: {
-      select: { title: "title", subtitle: "pageSlug", media: "image" },
+      select: {
+        title: "title",
+        subtitle: "pageSlug",
+        image: "image",
+        backgroundImage: "backgroundImage",
+      },
+      prepare({ title, subtitle, image, backgroundImage }) {
+        return {
+          title,
+          subtitle,
+          media: backgroundImage || image,
+        };
+      },
     },
   }),
 
@@ -194,7 +242,13 @@ export const schemaTypes = [
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (Rule) => Rule.required() }),
       defineField({ name: "description", title: "Description", type: "text", rows: 4, validation: (Rule) => Rule.required() }),
       defineField({ name: "iconName", title: "Icon Name", type: "string" }),
-      defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+      defineField({
+        name: "image",
+        title: "Service Card Image",
+        description: "Gambar ini tampil pada kartu What We Do di homepage.",
+        type: "image",
+        options: { hotspot: true },
+      }),
       defineField({ name: "detailHref", title: "Detail URL", type: "string" }),
       defineField({
         name: "points",
@@ -444,7 +498,13 @@ export const schemaTypes = [
       localizedTextField("descriptionI18n", "Description Bilingual", 5),
       defineField({ name: "outcome", title: "Outcome", type: "text", rows: 3 }),
       localizedTextField("outcomeI18n", "Outcome Bilingual", 3),
-      defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+      defineField({
+        name: "image",
+        title: "Portfolio Card Image",
+        description: "Gambar ini tampil pada card portfolio project.",
+        type: "image",
+        options: { hotspot: true },
+      }),
       statusField,
       sortOrderField,
     ],
@@ -460,7 +520,12 @@ export const schemaTypes = [
     fields: [
       defineField({ name: "name", title: "Name", type: "string", validation: (Rule) => Rule.required() }),
       defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "name" }, validation: (Rule) => Rule.required() }),
-      defineField({ name: "logo", title: "Logo", type: "image" }),
+      defineField({
+        name: "logo",
+        title: "Client / Partner Logo",
+        description: "Logo ini tampil di halaman Clients / Partners.",
+        type: "image",
+      }),
       defineField({ name: "websiteUrl", title: "Website URL", type: "string" }),
       defineField({ name: "category", title: "Category", type: "string" }),
       statusField,
@@ -482,7 +547,15 @@ export const schemaTypes = [
       defineField({ name: "description", title: "Description", type: "text", rows: 4, validation: (Rule) => Rule.required() }),
       localizedTextField("descriptionI18n", "Description Bilingual", 4),
       defineField({ name: "iconName", title: "Icon Name", type: "string" }),
-      defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+      defineField({
+        name: "image",
+        title: "Unused Image",
+        description:
+          "Saat ini tidak tampil di UI industry page. Field disembunyikan agar tidak membingungkan editor.",
+        type: "image",
+        options: { hotspot: true },
+        hidden: true,
+      }),
       statusField,
       sortOrderField,
     ],
@@ -505,7 +578,13 @@ export const schemaTypes = [
       defineField({ name: "description", title: "Description", type: "text", rows: 4, validation: (Rule) => Rule.required() }),
       localizedTextField("descriptionI18n", "Description Bilingual", 4),
       defineField({ name: "iconName", title: "Icon Name", type: "string" }),
-      defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+      defineField({
+        name: "image",
+        title: "Solution Banner Image",
+        description: "Gambar ini tampil pada banner/tab detail solusi.",
+        type: "image",
+        options: { hotspot: true },
+      }),
       defineField({
         name: "capabilities",
         title: "Core Capabilities",
@@ -542,7 +621,13 @@ export const schemaTypes = [
       defineField({ name: "location", title: "Location", type: "string" }),
       localizedStringField("locationI18n", "Location Bilingual"),
       defineField({ name: "registrationUrl", title: "Registration URL", type: "string" }),
-      defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+      defineField({
+        name: "image",
+        title: "Event Image",
+        description: "Gambar ini tampil pada card event di halaman Resources / Event.",
+        type: "image",
+        options: { hotspot: true },
+      }),
       statusField,
       sortOrderField,
     ],
@@ -563,7 +648,15 @@ export const schemaTypes = [
       localizedStringField("titleI18n", "Title Bilingual"),
       defineField({ name: "description", title: "Description", type: "text", rows: 5, validation: (Rule) => Rule.required() }),
       localizedTextField("descriptionI18n", "Description Bilingual", 5),
-      defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+      defineField({
+        name: "image",
+        title: "Unused Statement Image",
+        description:
+          "Saat ini statement company di UI tidak menampilkan gambar. Field disembunyikan agar tidak membingungkan editor.",
+        type: "image",
+        options: { hotspot: true },
+        hidden: true,
+      }),
       statusField,
       sortOrderField,
     ],
@@ -601,7 +694,13 @@ export const schemaTypes = [
       localizedStringField("roleI18n", "Role Bilingual"),
       defineField({ name: "bio", title: "Bio", type: "text", rows: 4 }),
       localizedTextField("bioI18n", "Bio Bilingual", 4),
-      defineField({ name: "photo", title: "Photo", type: "image", options: { hotspot: true } }),
+      defineField({
+        name: "photo",
+        title: "Leadership Photo",
+        description: "Foto ini tampil pada card Executive Leadership.",
+        type: "image",
+        options: { hotspot: true },
+      }),
       defineField({ name: "linkedinUrl", title: "LinkedIn URL", type: "string" }),
       statusField,
       sortOrderField,

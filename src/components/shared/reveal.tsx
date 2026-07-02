@@ -20,6 +20,7 @@ type RevealProps = {
   direction?: RevealDirection;
   duration?: number;
   once?: boolean;
+  preserveBackground?: boolean;
 };
 
 const directionClasses: Record<RevealDirection, string> = {
@@ -38,6 +39,7 @@ export function Reveal({
   direction = "up",
   duration = 700,
   once = true,
+  preserveBackground = false,
 }: RevealProps) {
   const Component = as ?? "div";
   const [element, setElement] = useState<HTMLElement | null>(null);
@@ -69,36 +71,50 @@ export function Reveal({
     return () => observer.disconnect();
   }, [element, once]);
 
+  const animatedClassName = cn(
+    "transform-gpu transition-all ease-out will-change-transform motion-reduce:translate-x-0 motion-reduce:translate-y-0 motion-reduce:opacity-100",
+    isVisible
+      ? "translate-x-0 translate-y-0 opacity-100"
+      : cn("opacity-0", directionClasses[direction]),
+  );
+
+  const animationStyle = {
+    transitionDelay: `${delay}ms`,
+    transitionDuration: `${duration}ms`,
+  } satisfies CSSProperties;
+
   const revealProps = {
     ref: setElement,
     className: cn(
-      "transform-gpu transition-all ease-out will-change-transform motion-reduce:translate-x-0 motion-reduce:translate-y-0 motion-reduce:opacity-100",
-      isVisible
-        ? "translate-x-0 translate-y-0 opacity-100"
-        : cn("opacity-0", directionClasses[direction]),
+      !preserveBackground && animatedClassName,
       className,
     ),
-    style: {
-      transitionDelay: `${delay}ms`,
-      transitionDuration: `${duration}ms`,
-    } satisfies CSSProperties,
+    style: preserveBackground ? undefined : animationStyle,
   };
 
+  const content = preserveBackground ? (
+    <div className={animatedClassName} style={animationStyle}>
+      {children}
+    </div>
+  ) : (
+    children
+  );
+
   if (Component === "section") {
-    return <section {...revealProps}>{children}</section>;
+    return <section {...revealProps}>{content}</section>;
   }
 
   if (Component === "article") {
-    return <article {...revealProps}>{children}</article>;
+    return <article {...revealProps}>{content}</article>;
   }
 
   if (Component === "li") {
-    return <li {...revealProps}>{children}</li>;
+    return <li {...revealProps}>{content}</li>;
   }
 
   if (Component === "ul") {
-    return <ul {...revealProps}>{children}</ul>;
+    return <ul {...revealProps}>{content}</ul>;
   }
 
-  return <div {...revealProps}>{children}</div>;
+  return <div {...revealProps}>{content}</div>;
 }

@@ -161,11 +161,19 @@ export function CompanyProfileDownloadDialog({
           document.body.appendChild(link);
           link.click();
           link.remove();
+        } else {
+          setResult({
+            ...response,
+            message:
+              "Data berhasil dikirim. File company profile belum dikonfigurasi, tim sales akan menghubungi Anda.",
+          });
         }
 
-        window.setTimeout(() => {
-          window.location.href = setting.downloadUrl;
-        }, setting.downloadFileUrl ? 900 : 700);
+        if (setting.downloadFileUrl) {
+          window.setTimeout(() => {
+            closeDialog();
+          }, 1200);
+        }
       }
     } catch {
       setResult({
